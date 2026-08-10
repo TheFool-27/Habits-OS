@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Habits OS // Sovereign Operator</title>
+
+    <!-- PWA Manifest & Stylesheet -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="habits.css">
+
+    <!-- FontAwesome Icons & Google Fonts -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="theme-sakuration">
+
+    <div class="app-container">
+
+        <!-- WORKSPACE HEADER -->
+        <header class="workspace-header">
+            <div class="workspace-title">
+                <i class="fa-solid fa-terminal" style="color: var(--accent-color);"></i> HABITS OS <span
+                    id="current-date-tag" style="font-weight: 400; font-size: 11px; color: var(--text-secondary);">//
+                    --</span>
+            </div>
+            <div class="workspace-actions">
+                <button class="icon-btn" onclick="openModal('timer-modal')" title="Zero-Dark-Thirty Focus"><i
+                        class="fa-solid fa-stopwatch"></i></button>
+                <button class="icon-btn" onclick="openWeeklyReview()" title="Weekly Review"><i
+                        class="fa-solid fa-file-invoice"></i></button>
+            </div>
+        </header>
+
+        <!-- ================= VIEW 1: HABITS MATRIX ================= -->
+        <section id="view-habits" class="app-view">
+
+            <!-- Level Banner -->
+            <div class="level-banner">
+                <div class="level-info">
+                    <span id="level-title">SANCTUARY LEVEL 1 // OPERATOR</span>
+                    <span id="xp-counter" style="color: var(--accent-color);">0 / 100 XP</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div id="xp-progress-fill" class="progress-bar-fill"></div>
+                </div>
+            </div>
+
+            <!-- New Protocol Form Card -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label">Initialize Protocol</div>
+                <input type="text" id="habit-input" placeholder="Protocol name (e.g., Deep Work Sprint)...">
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <select id="category-select" class="app-select">
+                        <option value="Health">Health</option>
+                        <option value="Deep Work">Deep Work</option>
+                        <option value="Mindset">Mindset</option>
+                        <option value="System">System</option>
+                    </select>
+                    <select id="energy-select" class="app-select">
+                        <option value="High Energy">High Energy</option>
+                        <option value="Low Energy">Low Energy</option>
+                    </select>
+                </div>
+
+                <input type="text" id="habit-trigger-input" placeholder="Trigger / Time anchor (Optional)...">
+
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <label style="font-size: 10px; color: var(--text-secondary);">Prerequisite Dependency:</label>
+                    <select id="habit-prerequisite-select" class="app-select">
+                        <option value="">None (Always Unlocked)</option>
+                    </select>
+                </div>
+
+                <button class="primary-btn" onclick="addHabit()" style="margin-top: 4px;">Commit Protocol to
+                    Vector</button>
+            </div>
+
+            <!-- Filter Bar -->
+            <div style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px;">
+                <button class="filter-btn active" onclick="filterHabits('all')">All</button>
+                <button class="filter-btn" onclick="filterHabits('Health')">Health</button>
+                <button class="filter-btn" onclick="filterHabits('Deep Work')">Deep Work</button>
+                <button class="filter-btn" onclick="filterHabits('Mindset')">Mindset</button>
+                <button class="filter-btn" onclick="filterHabits('System')">System</button>
+            </div>
+
+            <!-- Habits List -->
+            <div id="habit-list" class="habit-list">
+                <!-- Dynamically Rendered -->
+            </div>
+
+        </section>
+
+        <!-- ================= VIEW 2: ANALYTICS & TELEMETRY ================= -->
+        <section id="view-analytics" class="app-view hidden">
+            <div class="main-header">
+                <div>
+                    <h1>Telemetry Matrix</h1>
+                    <div class="subtitle">Operational analytics & energy auditing</div>
+                </div>
+            </div>
+
+            <!-- Top Stats Grid -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+                <div class="stat-card" style="text-align: center; padding: 12px 8px;">
+                    <div class="stat-label">Executions</div>
+                    <div id="stat-total" style="font-size: 18px; font-weight: 700; margin-top: 4px;">0</div>
+                </div>
+                <div class="stat-card" style="text-align: center; padding: 12px 8px;">
+                    <div class="stat-label">Top Streak</div>
+                    <div id="stat-streak"
+                        style="font-size: 18px; font-weight: 700; margin-top: 4px; color: var(--accent-color);">0d</div>
+                </div>
+                <div class="stat-card" style="text-align: center; padding: 12px 8px;">
+                    <div class="stat-label">Success Rate</div>
+                    <div id="stat-rate"
+                        style="font-size: 18px; font-weight: 700; margin-top: 4px; color: var(--success-color);">0%
+                    </div>
+                </div>
+            </div>
+
+            <!-- Heatmap Card -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label">30-Day Execution Vector</div>
+                <div id="heatmap-container" style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px;">
+                    <!-- Rendered via JS -->
+                </div>
+            </div>
+
+            <!-- Velocity Chart Card -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label">Output Velocity (14-Day Trend)</div>
+                <div id="velocity-chart-container"
+                    style="display: flex; align-items: flex-end; height: 80px; gap: 4px; padding-top: 10px; border-bottom: var(--border-width) var(--border-style) var(--border-color);">
+                    <!-- Rendered via JS -->
+                </div>
+            </div>
+
+            <!-- Energy Audit Logger -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label">Energy Audit & Friction Logger</div>
+                <div id="energy-leak-summary"
+                    style="font-size: 11px; color: var(--text-secondary); font-style: italic;">No recent friction points
+                    logged.</div>
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
+                    <input type="text" id="energy-gain-input" placeholder="What boosted your energy today?">
+                    <input type="text" id="energy-drain-input" placeholder="What drained your energy / friction point?">
+                    <button class="primary-btn sm-btn" onclick="submitEnergyAudit()">Commit Audit Telemetry</button>
+                </div>
+            </div>
+
+            <!-- Stoic Reflection Log -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label">Stoic Executive Reflection (+150 XP)</div>
+                <textarea id="habit-note-input" rows="2"
+                    placeholder="Operator journal log / daily post-mortem..."></textarea>
+                <button class="secondary-btn sm-btn" onclick="submitReflection()">Log Reflection</button>
+            </div>
+        </section>
+
+        <!-- ================= VIEW 3: THE ARENA & SHOP ================= -->
+        <section id="view-arena" class="app-view hidden">
+            <div class="main-header">
+                <div>
+                    <h1>The Arena & Vault</h1>
+                    <div class="subtitle">Combat procrastination & redeem rewards</div>
+                </div>
+                <div id="shop-coin-balance" style="font-weight: 700; color: var(--accent-color); font-size: 14px;">0 🪙
+                </div>
+            </div>
+
+            <!-- Boss Battle Card -->
+            <div class="stat-card"
+                style="display: flex; flex-direction: column; gap: 12px; border-color: rgba(239, 68, 68, 0.3);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div class="stat-label" style="color: var(--danger-color);">Boss: Procrastination Demon</div>
+                    <span id="boss-hp-text" style="font-size: 11px; font-weight: 700;">100 / 100</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div id="boss-hp-bar" class="progress-bar-fill"
+                        style="background-color: var(--danger-color); width: 100%;"></div>
+                </div>
+                <div style="font-size: 10px; color: var(--text-secondary);">
+                    Executing protocols damages the demon. Defeat it to harvest 50 bonus coins.
+                </div>
+            </div>
+
+            <!-- Reward Vault Shop -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 12px;">
+                <div class="stat-label">Reward Vault</div>
+                <div id="shop-items-list" style="display: flex; flex-direction: column; gap: 8px;">
+                    <!-- Rendered via JS -->
+                </div>
+                <div
+                    style="display: flex; gap: 6px; margin-top: 4px; border-top: 1px solid rgba(255,255,255,0.04); padding-top: 10px;">
+                    <input type="text" id="new-reward-name" placeholder="Custom reward name...">
+                    <input type="number" id="new-reward-cost" placeholder="Cost" style="width: 70px;">
+                    <button class="secondary-btn sm-btn" onclick="addShopItem()">Add</button>
+                </div>
+            </div>
+
+            <!-- Skill Tree Matrix -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label">Operator Skill Tree</div>
+                <div id="skill-tree-list" style="display: flex; flex-direction: column; gap: 8px;">
+                    <!-- Rendered via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= VIEW 4: TRIBE COMMAND ================= -->
+        <section id="view-tribe" class="app-view hidden">
+            <div class="main-header">
+                <div>
+                    <h1>Tribe Command</h1>
+                    <div class="subtitle">Sovereign peer accountability & telemetry sharing</div>
+                </div>
+            </div>
+
+            <!-- Add Peer Card -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label">Link Peer Operator</div>
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); border: var(--border-width) var(--border-style) var(--border-color); border-radius: var(--ui-radius); padding: 8px 12px;">
+                    <span style="font-size: 11px; color: var(--text-secondary);">Your Operator Handle:</span>
+                    <span id="my-operator-handle"
+                        style="font-family: monospace; font-weight: 700; color: var(--accent-color);">--</span>
+                </div>
+
+                <input type="text" id="peer-handle-input" placeholder="Enter peer handle (e.g., OP-4829X)...">
+
+                <div style="display: flex; gap: 16px; font-size: 11px; color: var(--text-secondary); padding: 4px 0;">
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                        <input type="checkbox" id="default-share-streak" checked> Share Streak
+                    </label>
+                    <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                        <input type="checkbox" id="default-share-rate" checked> Share Rate
+                    </label>
+                </div>
+
+                <button class="primary-btn sm-btn" onclick="addTribePeer()">Establish Peer Link</button>
+            </div>
+
+            <!-- Tribe Roster with Granular Privacy -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 12px;">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div class="stat-label">Active Peer Roster</div>
+                    <button class="secondary-btn sm-btn" onclick="syncTribeTunnel()">Sync Tunnel</button>
+                </div>
+                <div id="tribe-roster-list" class="social-scroll-list">
+                    <!-- Rendered via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= VIEW 5: SETTINGS & SOVEREIGNTY ================= -->
+        <section id="view-settings" class="app-view hidden">
+            <div class="main-header">
+                <div>
+                    <h1>System Sovereignty</h1>
+                    <div class="subtitle">Data ownership, themes, and backups</div>
+                </div>
+            </div>
+
+            <!-- Theme Switcher -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label">Interface Theme Preset</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <div class="theme-preset-card" onclick="setTheme('sakuration')">Sakuration (Dark Rose)</div>
+                    <div class="theme-preset-card" onclick="setTheme('notion')">Notion Minimal</div>
+                    <div class="theme-preset-card" onclick="setTheme('ocean')">Cyber Ocean</div>
+                    <div class="theme-preset-card" onclick="setTheme('forest')">Emerald Forest</div>
+                </div>
+            </div>
+
+            <!-- Data Sovereignty / Backup & Restore -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label">Local Data Sovereignty</div>
+                <div style="font-size: 11px; color: var(--text-secondary);">
+                    All operational logs remain strictly local to your device storage. Export a backup JSON file anytime
+                    or restore state.
+                </div>
+                <div style="display: flex; gap: 8px; margin-top: 4px;">
+                    <button class="secondary-btn sm-btn" style="flex: 1;" onclick="exportData()"><i
+                            class="fa-solid fa-download"></i> Export JSON</button>
+                    <label class="secondary-btn sm-btn"
+                        style="flex: 1; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                        <i class="fa-solid fa-upload"></i> Restore JSON <input type="file" onchange="importData(event)"
+                            style="display: none;">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Danger Zone / Sovereign Reset -->
+            <div class="stat-card"
+                style="border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.02); display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label" style="color: var(--danger-color);">Danger Zone // Sovereignty</div>
+                <div style="font-size: 11px; color: var(--text-secondary);">
+                    Permanently wipe all operational logs, streaks, and user telemetry. This action cannot be undone
+                    unless you have a JSON backup file.
+                </div>
+
+                <!-- Initial Reset Button -->
+                <button id="init-reset-btn" class="secondary-btn sm-btn"
+                    style="border-color: var(--danger-color); color: var(--danger-color); width: 100%;"
+                    onclick="showResetConfirmation()">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Execute Full Sovereign Reset
+                </button>
+
+                <!-- Inline Confirmation Container (Hidden by Default) -->
+                <div id="reset-confirm-container"
+                    style="display: none; flex-direction: column; gap: 8px; margin-top: 4px; border-top: 1px solid rgba(239, 68, 68, 0.2); padding-top: 10px;">
+                    <div style="font-size: 10px; color: var(--danger-color); font-weight: 600;">Type "RESET" below to
+                        confirm total destruction:</div>
+                    <div style="display: flex; gap: 6px;">
+                        <input type="text" id="reset-input-field" placeholder="Type RESET"
+                            style="flex: 1; border-color: rgba(239, 68, 68, 0.4);">
+                        <button class="primary-btn sm-btn" style="background-color: var(--danger-color); color: #fff;"
+                            onclick="executeSovereignReset()">Wipe</button>
+                        <button class="secondary-btn sm-btn" onclick="cancelReset()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= ICON-ONLY MOBILE NAVIGATION BAR ================= -->
+        <nav
+            style="display: flex; justify-content: space-around; align-items: center; background-color: var(--card-bg); border-top: var(--border-width) var(--border-style) var(--border-color); padding: 10px 0; position: fixed; bottom: 0; left: 0; width: 100%; z-index: 999;">
+
+            <button class="view-tab active" onclick="switchView('habits')" title="Protocols"
+                style="background: none; border: none; font-size: 18px; padding: 10px 16px; cursor: pointer; color: var(--text-secondary);">
+                <i class="fa-solid fa-list-check"></i>
+            </button>
+
+            <button class="view-tab" onclick="switchView('analytics')" title="Telemetry"
+                style="background: none; border: none; font-size: 18px; padding: 10px 16px; cursor: pointer; color: var(--text-secondary);">
+                <i class="fa-solid fa-chart-line"></i>
+            </button>
+
+            <button class="view-tab" onclick="switchView('arena')" title="Arena & Shop"
+                style="background: none; border: none; font-size: 18px; padding: 10px 16px; cursor: pointer; color: var(--text-secondary);">
+                <i class="fa-solid fa-shield-halved"></i>
+            </button>
+
+            <button class="view-tab" onclick="switchView('tribe')" title="Tribe"
+                style="background: none; border: none; font-size: 18px; padding: 10px 16px; cursor: pointer; color: var(--text-secondary);">
+                <i class="fa-solid fa-users"></i>
+            </button>
+
+            <button class="view-tab" onclick="switchView('settings')" title="Sovereignty"
+                style="background: none; border: none; font-size: 18px; padding: 10px 16px; cursor: pointer; color: var(--text-secondary);">
+                <i class="fa-solid fa-gear"></i>
+            </button>
+
+        </nav>
+
+    </div>
+
+    <!-- ================= MODALS & OVERLAYS ================= -->
+
+    <!-- Focus Timer Setup Modal -->
+    <div id="timer-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Zero-Dark-Thirty</h2>
+                <div class="modal-subtitle">Configure isolated focus sprint</div>
+            </div>
+            <div style="display: flex; gap: 8px; justify-content: center; margin: 10px 0;">
+                <button class="secondary-btn sm-btn" onclick="setTimerDuration(15)">15m</button>
+                <button class="secondary-btn sm-btn active" onclick="setTimerDuration(25)"
+                    style="border-color: var(--accent-color);">25m</button>
+                <button class="secondary-btn sm-btn" onclick="setTimerDuration(50)">50m</button>
+            </div>
+            <div id="setup-timer-display"
+                style="font-size: 32px; font-weight: 700; text-align: center; letter-spacing: 2px; color: var(--accent-color); margin: 6px 0;">
+                25:00</div>
+            <div style="display: flex; gap: 8px;">
+                <button class="primary-btn" style="flex: 1;" onclick="startZeroDarkThirty()">Engage Isolation</button>
+                <button class="secondary-btn" onclick="closeModal('timer-modal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Zero Dark Thirty Active Fullscreen Overlay -->
+    <div id="zero-dark-thirty-overlay" class="modal-overlay hidden"
+        style="background: var(--bg-color); z-index: 2000; flex-direction: column; justify-content: center; align-items: center; gap: 24px;">
+        <div style="font-size: 12px; font-weight: 700; color: var(--accent-color); letter-spacing: 2px;">
+            ZERO-DARK-THIRTY // ACTIVE ISOLATION</div>
+        <div id="zdt-timer-display"
+            style="font-size: 64px; font-weight: 700; font-family: monospace; letter-spacing: 4px;">25:00</div>
+        <div style="display: flex; gap: 12px;">
+            <button class="secondary-btn" onclick="togglePauseFocus()">Pause / Resume</button>
+            <button class="primary-btn" style="background-color: var(--danger-color); color: #fff;"
+                onclick="abortFocusMode()">Abort Protocol</button>
+        </div>
+    </div>
+
+    <!-- Weekly Review Modal -->
+    <div id="weekly-review-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Weekly Executive Review</h2>
+                <div class="modal-subtitle">Calibrate trajectory (+300 XP, +25 🪙)</div>
+            </div>
+            <textarea rows="3" placeholder="What worked this week? What needs pruning?"></textarea>
+            <div style="display: flex; gap: 8px; margin-top: 8px;">
+                <button class="primary-btn" style="flex: 1;" onclick="submitWeeklyReview()">Commit Review</button>
+                <button class="secondary-btn" onclick="closeModal('weekly-review-modal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Engine Link -->
+    <script src="habits.js"></script>
+</body>
+
+</html>

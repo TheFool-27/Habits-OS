@@ -1,0 +1,16 @@
+{
+    "name": "Habits OS",
+    "short_name": "HabitsOS",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0b0d10",
+    "theme_color": "#f43f5e",
+    "icons": [
+        {
+            "src": "https://img.icons8.com/ios-filled/512/f43f5e/system-information.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any maskable"
+        }
+    ]
+}
