@@ -1,0 +1,152 @@
+HABITS_OS // SYSTEM ARCHITECTURE & MASTER BLUEPRINT (v3.2.0)
+
+================================================================================
+1. CORE PHILOSOPHY & NEUROCHEMISTRY (THE WHITE-HAT ENGINE)
+================================================================================
+
+* The Antithesis of Attention Economy: Traditional apps hire behavioral 
+  psychologists to build a casino—using variable reward schedules, infinite 
+  scrolls, and red notification badges to hijack dopamine and harvest human 
+  attention. Habits OS uses those exact same neurochemical mechanics for a 
+  positive counter-offensive: starving anticipatory dopamine (no feeds, no 
+  random loops) and concentrating a clean, high-intensity chemical reward 
+  strictly at the moment of real-world execution, followed by an instant 
+  ejection protocol out of the app.
+* Dopamine on Exit, Not Entry: Opening the app yields zero synthetic dopamine. 
+  The interface is deliberately austere. The chemical reward is routed 
+  exclusively through checking off real-world protocols (XP gains, Discipline 
+  Coin drops, haptic feedback) which triggers the brain to associate satisfaction 
+  with physical action, not digital screen time.
+* Radical Minimalism (The Ghost UI) & The Zeigarnik Relief: Zero visual clutter. 
+  The default screen shows only today's uncompleted protocols. Completed items 
+  instantly fade or collapse, leveraging the Zeigarnik effect to provide the 
+  profound psychological relief of a completely closed loop—pushing the user 
+  immediately back into the physical world.
+* Identity Reinforcement (Cognitive Consistency): Using objective rolling 
+  consistency data rather than cartoon badges to signal to the brain: 
+  "I am a disciplined operator who executes my matrix."
+
+================================================================================
+2. PLATFORM & DEPLOYMENT ARCHITECTURE
+================================================================================
+
+* Native Android APK & WebView: Optimized for native WebView and APK execution 
+  (Capacitor/Cordova ready). Grants direct access to native mobile APIs, 
+  background execution, hardware haptics, and local file storage.
+* Data Sovereignty & Zero Infrastructure: Zero corporate cloud storage. All user 
+  telemetry, state data, and history live locally in device storage (localStorage). 
+  Users maintain complete ownership via unencrypted plain-text JSON manual backups 
+  and imports (with a 30-day sovereignty reminder banner). Zero database hosting 
+  bills, API keys, or cloud servers required.
+
+================================================================================
+3. ADVANCED FEATURE STACK & MECHANICS
+================================================================================
+
+* Circadian Circuits & Energy-Matched Protocols: Protocols map to biological 
+  time blocks (Morning High Cognition, Midday Execution, Evening Wind-Down) and 
+  scale dynamically based on user energy levels (High, Normal, Low) to prevent 
+  cognitive burnout.
+* Habit Chaining & Prerequisite Enforcement: Dependent protocol triggers. Heavy 
+  protocols (e.g., Deep Work) can be locked behind foundational triggers and 
+  prerequisites (e.g., Morning Hydration & Movement) to build unstoppable 
+  behavioral momentum, blocking completion if the parent protocol is incomplete.
+* Failure Forensics & Environmental Shield: Instead of punishing missed days 
+  with a total streak wipe ("Never Miss Twice" buffer/recovery window), the 
+  system logs systemic friction, environmental bottlenecks, and failure root 
+  causes for weekly debugging.
+* The Arena, Boss Battle & Discipline Shop: Gamification stripped of cartoon bloat. 
+  Real-time HP tracking (100 HP) of the "Procrastination Demon" boss that depletes 
+  automatically as protocols are completed. Users earn Discipline Coins/Shards and 
+  redeem them for custom real-world rewards (e.g., Unrestricted Leisure, Cheat Meal Protocol).
+* Focus Engine (Zero Dark Thirty): Built-in isolation timer supporting 25m, 45m, 
+  and 90m deep work blocks. Features fullscreen distraction-free execution mode 
+  with pause/resume, abort capabilities, and Web Audio API synthesis for custom 
+  ambient noise (Brown noise, White noise) entirely client-side without external assets.
+* Protocol Management & Deletion: Full CRUD capabilities for habits, including 
+  an integrated delete button with confirmation prompts and cleanup of dependency 
+  references.
+
+================================================================================
+4. MULTIPLAYER ACCOUNTABILITY & SOCIAL HUB
+================================================================================
+
+* Social & Tribe Framework: Add groups via name or invite code and add friends 
+  via Operator CallSigns.
+* Dynamic Social Rendering: Dynamic updating of social lists and sharing checkbox 
+  configurations in modals upon group or friend creation.
+* Zero-Knowledge Ephemeral Relay (Model B Blueprint): Serverless privacy blueprint 
+  where accountability partners stay synced without a central database harvesting 
+  data. Uses a blind, zero-storage WebSocket relay passing encrypted strings 
+  (weekly hashes/live status) with the Savage Ping feature for haptic wake-up alerts.
+
+================================================================================
+5. DESIGN SYSTEM & PROGRESSIVE DISCLOSURE (THE THEME ENGINE)
+================================================================================
+
+* Zero-Glow & Zero-Shadow UI: Stark, minimal, utilitarian, and completely flat card 
+  surfaces. Crisp 1px borders using `rgba(255, 255, 255, 0.1)` variables and zero 
+  synthetic shadows or glow filters.
+* Theme Presets:
+  - Sakuration / Carta Archive (Default dark mode with rose accent)
+  - Notion (Grayscale minimalist)
+  - Ocean (Deep navy/blue with cyan accents)
+  - Forest / Deep Pine (Deep dark emerald accents)
+  - Obsidian Monolith (Absolute black OLED mode)
+  - Green Phosphor (Retro hacker terminal)
+
+================================================================================
+6. SECURITY & CODE HARDENING
+================================================================================
+
+* XSS Neutralization: All user-submitted inputs (protocol names, triggers, notes, 
+  and shop rewards) are rendered securely to eliminate Cross-Site Scripting attack vectors.
+* Input Sanitization: Client-side validation blocks empty strings and malformed 
+  numeric inputs across all forms.
+
+================================================================================
+7. THE HABITS OS CONSTITUTION (THE UNCOMPROMISABLE LAWS)
+================================================================================
+
+1. Sovereign Privacy (Zero Telemetry)
+   Data never leaves the device. No cloud servers, no analytics trackers, no 
+   backend databases spying on user habits. 
+
+2. Screen-Time Inversion (Anti-Engagement)
+   The app’s value is inversely proportional to the time spent inside it. No 
+   infinite feeds, no discovery tabs, no content streams, and no features designed 
+   to keep the user glued to the glass. Success is a 3-second session.
+
+3. Zero Manipulation (Anti-Addiction Architecture)
+   No synthetic rewards, no flashing confetti, no sound effects engineered to 
+   spike anticipatory dopamine, and no artificial guilt trips (like wiping out 
+   a 30-day streak because of one missed day). Dopamine is earned strictly on 
+   execution and exit.
+
+4. Radical Efficiency (Sub-Second Utility)
+   Built for pure speed. Instant boot time, zero loading screens, and a minimalist 
+   matrix layout that demands minimum cognitive load.
+
+5. Absolute Data Ownership (Zero Lock-In)
+   The user owns their data down to the metal. Instant, unencrypted plain-text 
+   JSON export and import capabilities mean the user can back up, move, or wipe 
+   their data whenever they want.
+
+6. Objective Reality (Honest Metrics)
+   Replace emotional punishments with rolling consistency percentages. The 
+   system tells the truth about performance without making the user feel like 
+   a failure for being human.
+
+================================================================================
+8. CODEBASE FILE STRUCTURE & ENGINE MODULES
+================================================================================
+
+* manifest.json: PWA metadata and standalone display config.
+* sw.js: Service worker asset caching for offline-first reliability.
+* index.html: Mobile-optimized HTML layout with thumb-zone navigation, modals, 
+  and overlays.
+* habits.css / style.css: Flat design system stylesheet with CSS variables for dynamic theme 
+  swapping and zero glow effects.
+* habits.js: Core engine handling state persistence, execution tracking, XP 
+  progression, operator levels, coin economy, local storage, timer intervals, 
+  Web Audio generation, analytics heatmaps/velocity charts, and data export/import.
