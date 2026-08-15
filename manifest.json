@@ -1,16 +1,20 @@
 {
-    "name": "Habits OS",
-    "short_name": "HabitsOS",
-    "start_url": "/",
+    "name": "Habits-OS",
+    "short_name": "Habits",
+    "start_url": "/Habits-OS/",
+    "scope": "/Habits-OS/",
+    "id": "/Habits-OS/",
     "display": "standalone",
-    "background_color": "#0b0d10",
-    "theme_color": "#f43f5e",
+    "orientation": "portrait",
+    "background_color": "#ffffff",
+    "theme_color": "#000000",
+    "description": "A sovereign, offline-first habit tracker to build consistency.",
+    "lang": "en",
     "icons": [
         {
-            "src": "https://img.icons8.com/ios-filled/512/f43f5e/system-information.png",
+            "src": "icon-512.png",
             "sizes": "512x512",
-            "type": "image/png",
-            "purpose": "any maskable"
+            "type": "image/png"
         }
     ]
 }
