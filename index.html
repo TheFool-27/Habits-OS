@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Habits OS // Sovereign Operator v1.2</title>
+
+    <!-- PWA & Sovereign Mobile Optimization -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="habits.css">
+
+    <!-- Typography & Iconography -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="theme-sakuration">
+
+    <div class="app-container" role="application" aria-label="Habits OS Sovereign Operator">
+
+        <!-- WORKSPACE HEADER -->
+        <header class="workspace-header" role="banner">
+            <div class="workspace-title" id="secret-trigger" style="cursor: pointer; user-select: none;"
+                title="Sovereign OS">
+                <i class="fa-solid fa-terminal" style="color: var(--accent-primary);" aria-hidden="true"></i> HABITS OS
+                <span id="current-date-tag" style="font-weight: 400; font-size: 11px; color: var(--text-secondary);">//
+                    --</span>
+            </div>
+            <div class="workspace-actions">
+                <!-- Streak Freezer Badge -->
+                <button onclick="showFreezeInfo()" title="Streak Insurance Active" class="secondary-btn sm-btn"
+                    aria-label="Streak insurance status"
+                    style="display: flex; align-items: center; gap: 4px; padding: 4px 8px; cursor: pointer; color: var(--success); background: transparent; border: 1px solid var(--border-glass);">
+                    <i class="fa-solid fa-snowflake" aria-hidden="true" style="color: #13c2f2"></i> <span
+                        id="freeze-token-badge">1</span>
+                </button>
+                <button class="icon-btn" onclick="openModal('timer-modal')" title="Zero-Dark-Thirty Focus"
+                    aria-label="Open focus timer">
+                    <i class="fa-solid fa-stopwatch" aria-hidden="true"></i>
+                </button>
+                <button class="icon-btn" onclick="openWeeklyReview()" title="Weekly Review"
+                    aria-label="Open weekly review">
+                    <i class="fa-solid fa-file-invoice" aria-hidden="true"></i>
+                </button>
+            </div>
+        </header>
+
+
+        <!-- ================= VIEW 1: HABITS MATRIX ================= -->
+        <section id="view-habits" class="app-view" role="tabpanel" aria-label="Habits Matrix">
+
+            <!-- Level Banner -->
+            <div class="level-banner" role="region" aria-label="Operator Progress">
+                <div class="level-info">
+                    <span id="level-title">SANCTUARY LEVEL 1 // OPERATOR</span>
+                    <span id="xp-counter" style="color: var(--accent-primary);" aria-live="polite">0 / 100 XP</span>
+                </div>
+                <div class="progress-bar-container" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                    aria-valuenow="0">
+                    <div id="xp-progress-fill" class="progress-bar-fill"></div>
+                </div>
+            </div>
+
+            <!-- Collapsible Creator Toggle -->
+            <button class="secondary-btn" onclick="toggleProtocolCreator()" aria-expanded="false"
+                aria-controls="protocol-creator-card"
+                style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <i class="fa-solid fa-plus" id="creator-toggle-icon" aria-hidden="true"></i>
+                <span id="creator-toggle-text">New Protocol</span>
+            </button>
+
+            <!-- Protocol Form Card (Hidden by Default) -->
+            <div id="protocol-creator-card" class="stat-card hidden"
+                style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label">Initialize Protocol</div>
+                <input type="text" id="habit-input" placeholder="Protocol name (e.g., Deep Work Sprint)..."
+                    aria-label="Protocol name">
+
+                <div style="display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center;">
+                    <select id="category-select" class="app-select" aria-label="Protocol category">
+                        <!-- Dynamically populated via JS -->
+                    </select>
+                    <button class="secondary-btn sm-btn" onclick="promptNewCategory()" title="Add Custom Category"
+                        aria-label="Add custom category">
+                        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+                    </button>
+                </div>
+
+                <select id="energy-select" class="app-select" aria-label="Energy requirement">
+                    <option value="High Energy">High Energy</option>
+                    <option value="Low Energy">Low Energy</option>
+                </select>
+
+                <input type="text" id="habit-trigger-input" placeholder="Trigger / Time anchor (Optional)..."
+                    aria-label="Trigger or time anchor">
+
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <label for="habit-prerequisite-select"
+                        style="font-size: 10px; color: var(--text-secondary);">Prerequisite Dependency:</label>
+                    <select id="habit-prerequisite-select" class="app-select">
+                        <option value="">None (Always Unlocked)</option>
+                    </select>
+                </div>
+
+                <button class="primary-btn" onclick="addHabit()" style="margin-top: 4px;">Commit Protocol to
+                    Vector</button>
+            </div>
+
+            <button onclick="launchSequence('b_morning')" class="primary-btn" style="width: 100%;">
+                <i class="fa-solid fa-rocket" aria-hidden="true"></i> Launch Morning Sequence
+            </button>
+
+            <!-- Dynamic Filter Bar Container -->
+            <div id="filter-bar-container" role="toolbar" aria-label="Habit filters"
+                style="display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; align-items: center;">
+                <button class="filter-btn active" onclick="filterHabits('all', event)">All</button>
+            </div>
+
+            <!-- Habits List -->
+            <div id="habit-list" class="habit-list" aria-label="Protocols list">
+                <!-- Dynamically Rendered with Fallback State -->
+                <div
+                    style="text-align: center; padding: 24px; color: var(--text-secondary); font-size: 12px; font-style: italic;">
+                    Initializing vector stream...
+                </div>
+            </div>
+
+        </section>
+
+        <!-- ================= VIEW 2: ANALYTICS & TELEMETRY ================= -->
+        <section id="view-analytics" class="app-view hidden" role="tabpanel" aria-label="Telemetry Matrix">
+            <div class="main-header">
+                <div>
+                    <h1>Telemetry Matrix</h1>
+                    <div class="subtitle">Operational analytics & energy auditing</div>
+                </div>
+            </div>
+
+            <!-- Top Stats Grid -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
+                <div class="stat-card" style="text-align: center; padding: 12px 8px;">
+                    <div class="stat-label">Executions</div>
+                    <div id="stat-total" class="mono-data" style="font-size: 18px; font-weight: 700; margin-top: 4px;">0
+                    </div>
+                </div>
+                <div class="stat-card" style="text-align: center; padding: 12px 8px;">
+                    <div class="stat-label">Top Streak</div>
+                    <div id="stat-streak" class="mono-data"
+                        style="font-size: 18px; font-weight: 700; margin-top: 4px; color: var(--accent-primary);">0d
+                    </div>
+                </div>
+                <div class="stat-card" style="text-align: center; padding: 12px 8px;">
+                    <div class="stat-label">Success Rate</div>
+                    <div id="stat-rate" class="mono-data"
+                        style="font-size: 18px; font-weight: 700; margin-top: 4px; color: var(--success);">0%</div>
+                </div>
+            </div>
+
+            <!-- Heatmap Card -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label">30-Day Execution Vector</div>
+                <div id="heatmap-container" aria-label="30 day execution heatmap"
+                    style="display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px;">
+                    <!-- Rendered via JS -->
+                </div>
+            </div>
+
+            <!-- Velocity Chart Card -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label">Output Velocity (14-Day Trend)</div>
+                <div id="velocity-chart-container" aria-label="14 day velocity trend"
+                    style="display: flex; align-items: flex-end; height: 80px; gap: 4px; padding-top: 10px; border-bottom: 1px solid var(--border-glass);">
+                    <!-- Rendered via JS -->
+                </div>
+            </div>
+
+            <!-- Energy Audit Logger -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label">Energy Audit & Friction Logger</div>
+                <div id="energy-leak-summary"
+                    style="font-size: 11px; color: var(--text-secondary); font-style: italic;">No recent friction points
+                    logged.</div>
+                <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 4px;">
+                    <input type="text" id="energy-gain-input" placeholder="What boosted your energy today?"
+                        aria-label="Energy booster log">
+                    <input type="text" id="energy-drain-input" placeholder="What drained your energy / friction point?"
+                        aria-label="Energy drain log">
+                    <button class="primary-btn sm-btn" onclick="submitEnergyAudit()">Commit Audit Telemetry</button>
+                </div>
+            </div>
+
+            <!-- Energy & Output Correlation Matrix -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label">Energy-to-Output Correlation Matrix</div>
+                <div id="energy-correlation-card">
+                    <!-- Injected via JS -->
+                </div>
+            </div>
+
+            <!-- Stoic Reflection Log -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label">Stoic Executive Reflection (+150 XP)</div>
+                <textarea id="habit-note-input" rows="2" placeholder="Operator journal log / daily post-mortem..."
+                    aria-label="Executive reflection log"></textarea>
+                <button class="secondary-btn sm-btn" onclick="submitReflection()">Log Reflection</button>
+            </div>
+        </section>
+
+        <!-- ================= VIEW 3: THE ARENA & SHOP ================= -->
+        <section id="view-arena" class="app-view hidden" role="tabpanel" aria-label="Arena and Vault">
+            <div class="main-header">
+                <div>
+                    <h1>The Arena & Vault</h1>
+                    <div class="subtitle">Combat procrastination & redeem rewards</div>
+                </div>
+                <div id="shop-coin-balance" class="mono-data" aria-label="Coin balance"
+                    style="font-weight: 700; color: var(--accent-primary); font-size: 14px;">0 🪙</div>
+            </div>
+
+            <!-- Boss Battle Card -->
+            <div class="stat-card"
+                style="display: flex; flex-direction: column; gap: 12px; border-color: rgba(239, 68, 68, 0.3);">
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div class="stat-label" style="color: var(--danger);">Boss: Procrastination Demon</div>
+                    <span id="boss-hp-text" class="mono-data" aria-live="polite"
+                        style="font-size: 11px; font-weight: 700;">100 / 100</span>
+                </div>
+                <div class="progress-bar-container" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                    aria-valuenow="100">
+                    <div id="boss-hp-bar" class="progress-bar-fill"
+                        style="background-color: var(--danger); width: 100%;"></div>
+                </div>
+                <div style="font-size: 10px; color: var(--text-secondary);">
+                    Executing protocols damages the demon. Defeat it to harvest 50 bonus coins.
+                </div>
+            </div>
+
+            <!-- Reward Vault Shop -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 12px;">
+                <div class="stat-label">Reward Vault</div>
+                <div id="shop-items-list" aria-label="Reward items list"
+                    style="display: flex; flex-direction: column; gap: 8px;">
+                    <!-- Rendered via JS -->
+                </div>
+                <div
+                    style="display: flex; gap: 6px; margin-top: 4px; border-top: 1px solid var(--border-glass); padding-top: 10px;">
+                    <input type="text" id="new-reward-name" placeholder="Custom reward name..."
+                        aria-label="New reward name">
+                    <input type="number" id="new-reward-cost" placeholder="Cost" aria-label="New reward cost"
+                        style="width: 70px;">
+                    <button class="secondary-btn sm-btn" onclick="addShopItem()">Add</button>
+                </div>
+            </div>
+
+            <!-- Skill Tree Matrix -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label">Operator Skill Tree</div>
+                <div id="skill-tree-list" aria-label="Operator skill tree"
+                    style="display: flex; flex-direction: column; gap: 8px;">
+                    <!-- Rendered via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= VIEW 4: SETTINGS & SOVEREIGNTY ================= -->
+        <section id="view-settings" class="app-view hidden" role="tabpanel" aria-label="System Sovereignty">
+            <div class="main-header">
+                <div>
+                    <h1>System Sovereignty</h1>
+                    <div class="subtitle">Data ownership, themes, and backups</div>
+                </div>
+            </div>
+
+            <!-- Theme Switcher -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label">Interface Theme Preset</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <div class="theme-preset-card" onclick="setTheme('sakuration')" role="button" tabindex="0">
+                        Sakuration (Dark Rose)</div>
+                    <div class="theme-preset-card" onclick="setTheme('zen')" role="button" tabindex="0">Sanctuary (Calm)
+                    </div>
+                    <div class="theme-preset-card" onclick="setTheme('ocean')" role="button" tabindex="0">Cyber Ocean
+                    </div>
+                    <div class="theme-preset-card" onclick="setTheme('forest')" role="button" tabindex="0">Emerald
+                        Forest</div>
+                </div>
+            </div>
+
+            <!-- Data Sovereignty / Backup & Restore -->
+            <div class="stat-card" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label">Local Data Sovereignty</div>
+                <div style="font-size: 11px; color: var(--text-secondary);">
+                    All operational logs remain strictly local to your device storage. Export a backup JSON file anytime
+                    or restore state.
+                </div>
+                <div style="display: flex; gap: 8px; margin-top: 4px;">
+                    <button class="secondary-btn sm-btn" style="flex: 1;" onclick="exportData()">
+                        <i class="fa-solid fa-download" aria-hidden="true"></i> Export JSON
+                    </button>
+                    <label class="secondary-btn sm-btn"
+                        style="flex: 1; text-align: center; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                        <i class="fa-solid fa-upload" aria-hidden="true"></i> Restore JSON
+                        <input type="file" onchange="importData(event)" aria-label="Restore JSON file"
+                            style="display: none;">
+                    </label>
+                </div>
+            </div>
+
+            <!-- Danger Zone / Sovereign Reset -->
+            <div class="reset-system"
+                style="border-color: rgba(239, 68, 68, 0.3); background: rgba(239, 68, 68, 0.02); display: flex; flex-direction: column; gap: 10px;">
+                <div class="stat-label" style="color: var(--danger);">Danger Zone // Sovereignty</div>
+                <div style="font-size: 11px; color: var(--text-secondary);">
+                    Permanently wipe all operational logs, streaks, and user telemetry. This action cannot be undone
+                    unless you have a JSON backup file.
+                </div>
+
+                <!-- Initial Reset Button -->
+                <button id="init-reset-btn" class="reset-system-btn"
+                    style="border-color: var(--danger); color: var(--danger); width: 100%;"
+                    onclick="showResetConfirmation()">
+                    <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Execute Full Sovereign Reset
+                </button>
+
+                <!-- Inline Confirmation Container (Hidden by Default) -->
+                <div id="reset-confirm-container"
+                    style="display: none; flex-direction: column; gap: 8px; margin-top: 4px; border-top: 1px solid rgba(239, 68, 68, 0.2); padding-top: 10px;">
+                    <div style="font-size: 10px; color: var(--danger); font-weight: 600;">Type "RESET" below to confirm
+                        total destruction:</div>
+                    <div style="display: flex; gap: 6px;">
+                        <input type="text" id="reset-input-field" placeholder="Type RESET"
+                            aria-label="Confirmation keyword" style="flex: 1; border-color: rgba(239, 68, 68, 0.4);">
+                        <button class="primary-btn sm-btn" style="background-color: var(--danger); color: #fff;"
+                            onclick="executeSovereignReset()">Wipe</button>
+                        <button class="secondary-btn sm-btn" onclick="cancelReset()">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= FIXED BOTTOM NAVIGATION BAR ================= -->
+        <nav role="navigation" aria-label="Main system navigation"
+            style="display: flex; justify-content: space-around; align-items: center; background-color: var(--bg-card); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-top: 1px solid var(--border-glass); padding: 10px 0; position: fixed; bottom: 0; left: 0; width: 100%; z-index: 999;">
+            <button class="view-tab active" role="tab" aria-selected="true" onclick="switchView('habits', event)"
+                title="Protocols"
+                style="background: none; border: none; font-size: 18px; padding: 10px 16px; cursor: pointer; color: var(--text-secondary);">
+                <i class="fa-solid fa-list-check" aria-hidden="true"></i>
+            </button>
+            <button class="view-tab" role="tab" aria-selected="false" onclick="switchView('analytics', event)"
+                title="Telemetry"
+                style="background: none; border: none; font-size: 18px; padding: 10px 16px; cursor: pointer; color: var(--text-secondary);">
+                <i class="fa-solid fa-chart-line" aria-hidden="true"></i>
+            </button>
+            <button class="view-tab" role="tab" aria-selected="false" onclick="switchView('arena', event)"
+                title="Arena & Shop"
+                style="background: none; border: none; font-size: 18px; padding: 10px 16px; cursor: pointer; color: var(--text-secondary);">
+                <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+            </button>
+            <button class="view-tab" role="tab" aria-selected="false" onclick="switchView('settings', event)"
+                title="Sovereignty"
+                style="background: none; border: none; font-size: 18px; padding: 10px 16px; cursor: pointer; color: var(--text-secondary);">
+                <i class="fa-solid fa-gear" aria-hidden="true"></i>
+            </button>
+        </nav>
+    </div>
+
+    <!-- ================= MODALS & OVERLAYS ================= -->
+
+    <!-- SECRET TERMINAL MODAL -->
+    <div id="secret-terminal" class="modal-overlay hidden" role="dialog" aria-modal="true"
+        aria-label="Restricted operator terminal">
+        <div class="modal-content" style="max-width: 440px; padding: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div>
+                    <h2 style="margin: 0; font-size: 18px;"><i class="fa-solid fa-terminal"
+                            style="color: var(--accent-primary); margin-right: 8px;" aria-hidden="true"></i> SECRET
+                        SETTINGS</h2>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                    </div>
+                </div>
+                <button onclick="toggleSecretTerminal()" aria-label="Close terminal"
+                    style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px;"><i
+                        class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <!-- Feature Category: Custom Secret Themes -->
+                <div class="stat-card" style="display: flex; flex-direction: column; gap: 8px;">
+                    <div class="stat-label">[CLASSIFIED THEMES]</div>
+                    <div style="display: grid; grid-template-columns: 1fr; gap: 6px;">
+                        <button class="secondary-btn sm-btn" onclick="setTheme('vignette')">Vignette (Aged
+                            Sepia)</button>
+                        <button class="secondary-btn sm-btn" onclick="setTheme('sunrise')">Sunrise (Dawn
+                            Horizon)</button>
+                        <button class="secondary-btn sm-btn" onclick="setTheme('sunset')">Sunset (Twilight
+                            Horizon)</button>
+                        <button class="secondary-btn sm-btn" onclick="setTheme('amethyst')">Amethyst (Nocturnal
+                            Violet)</button>
+                    </div>
+                </div>
+            </div>
+
+            <button class="primary-btn" style="width: 100%; margin-top: 20px;" onclick="toggleSecretTerminal()">Close
+                Terminal</button>
+        </div>
+    </div>
+
+    <!-- Focus Timer Setup Modal -->
+    <div id="timer-modal" class="modal-overlay hidden" role="dialog" aria-modal="true" aria-label="Focus timer setup">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Zero-Dark-Thirty</h2>
+                <div class="modal-subtitle">Configure custom isolated focus sprint</div>
+            </div>
+            <div style="display: flex; gap: 8px; align-items: center; justify-content: center; margin: 12px 0;">
+                <input type="number" id="custom-timer-input" class="mono-data" value="25" min="1" max="240"
+                    aria-label="Timer duration in minutes"
+                    style="text-align: center; font-size: 24px; font-weight: 700; width: 120px; padding: 8px;">
+                <span style="font-size: 13px; color: var(--text-secondary); font-weight: 600;">MINUTES</span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button class="primary-btn" style="flex: 1;" onclick="startCustomFocusTimer()">Engage Isolation</button>
+                <button class="secondary-btn" onclick="closeModal('timer-modal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Zero Dark Thirty Active Fullscreen Overlay -->
+    <div id="zero-dark-thirty-overlay" class="modal-overlay hidden" role="dialog" aria-modal="true"
+        aria-label="Active focus session"
+        style="background: var(--bg-obsidian); z-index: 2000; flex-direction: column; justify-content: center; align-items: center; gap: 24px;">
+        <div style="font-size: 12px; font-weight: 700; color: var(--accent-primary); letter-spacing: 2px;">
+            ZERO-DARK-THIRTY // ACTIVE ISOLATION</div>
+        <div id="zdt-timer-display" class="mono-data" aria-live="polite"
+            style="font-size: 64px; font-weight: 700; letter-spacing: 4px;">25:00</div>
+        <div style="display: flex; gap: 12px;">
+            <button class="secondary-btn" onclick="togglePauseFocus()">Pause / Resume</button>
+            <button class="primary-btn" style="background-color: var(--danger); color: #fff;"
+                onclick="abortFocusMode()">Abort Protocol</button>
+        </div>
+    </div>
+
+    <!-- Sequence Execution Modal -->
+    <div id="sequence-modal" class="modal-overlay hidden" role="dialog" aria-modal="true"
+        aria-label="Active execution sequence">
+        <div class="modal-content" style="max-width: 440px; padding: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                <div>
+                    <h2 style="margin: 0; font-size: 18px;"><i class="fa-solid fa-rocket"
+                            style="color: var(--accent-primary); margin-right: 8px;" aria-hidden="true"></i> Active
+                        Execution Sequence</h2>
+                    <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">Clear protocols with zero
+                        friction.</div>
+                </div>
+                <button onclick="closeModal('sequence-modal')" aria-label="Close sequence modal"
+                    style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px;"><i
+                        class="fa-solid fa-xmark" aria-hidden="true"></i></button>
+            </div>
+            <!-- Live Sequence Progress Bar -->
+            <div class="progress-bar-container" role="progressbar" aria-valuemin="0" aria-valuemax="100"
+                aria-valuenow="0" style="margin-bottom: 16px;">
+                <div id="sequence-progress-bar" class="progress-bar-fill"
+                    style="background: var(--success); width: 0%;"></div>
+            </div>
+            <div id="sequence-modal-list"
+                style="display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow-y: auto; padding-right: 4px;">
+                <!-- Injected via JS -->
+            </div>
+            <button class="primary-btn" style="width: 100%; margin-top: 20px;"
+                onclick="closeModal('sequence-modal')">Mission Terminate / Exit</button>
+        </div>
+    </div>
+
+    <!-- Edit Habit Modal -->
+    <div id="edit-habit-modal" class="modal-overlay hidden" role="dialog" aria-modal="true"
+        aria-label="Edit protocol parameters">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Edit Protocol</h2>
+                <div class="modal-subtitle">Modify parameters of active vector</div>
+            </div>
+            <input type="hidden" id="edit-habit-id">
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 10px;">
+                <input type="text" id="edit-habit-name" placeholder="Protocol name..." aria-label="Protocol name">
+                <select id="edit-habit-category" class="app-select" aria-label="Protocol category">
+                    <!-- Populated dynamically -->
+                </select>
+                <select id="edit-habit-energy" class="app-select" aria-label="Protocol energy requirement">
+                    <option value="High Energy">High Energy</option>
+                    <option value="Low Energy">Low Energy</option>
+                </select>
+                <input type="text" id="edit-habit-trigger" placeholder="Trigger / Time anchor..."
+                    aria-label="Protocol trigger">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                    <label for="edit-habit-prerequisite"
+                        style="font-size: 10px; color: var(--text-secondary);">Prerequisite Dependency:</label>
+                    <select id="edit-habit-prerequisite" class="app-select">
+                        <option value="">None (Always Unlocked)</option>
+                    </select>
+                </div>
+            </div>
+            <div style="display: flex; gap: 8px; margin-top: 14px;">
+                <button class="primary-btn" style="flex: 1;" onclick="saveEditedHabit()">Save Changes</button>
+                <button class="secondary-btn" onclick="closeModal('edit-habit-modal')">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Daily Reward Choice Modal -->
+    <div id="reward-choice-modal" class="modal-overlay hidden" role="dialog" aria-modal="true"
+        aria-label="Protocol milestone reward">
+        <div class="modal-content" style="text-align: center;">
+            <div class="modal-header">
+                <h2>Protocol Milestone Achieved</h2>
+                <div class="modal-subtitle">All daily vectors secured while inventory is depleted. Choose your reward:
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 15px;">
+                <button class="primary-btn" style="flex: 1; padding: 12px;" onclick="claimReward('coins')">
+                    <i class="fa-solid fa-coins" aria-hidden="true"></i> +50 Coins
+                </button>
+                <button class="primary-btn" style="flex: 1; padding: 12px;" onclick="claimReward('freeze')">
+                    <i class="fa-solid fa-snowflake" aria-hidden="true" style="color: blue;"></i> +1 Streak Freeze
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Weekly Review Modal -->
+    <div id="weekly-review-modal" class="modal-overlay hidden" role="dialog" aria-modal="true"
+        aria-label="Weekly executive review">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Weekly Executive Review</h2>
+                <div class="modal-subtitle">Calibrate trajectory (+300 XP, +25 🪙)</div>
+            </div>
+            <textarea id="weekly-review-textarea" rows="3" placeholder="What worked this week? What needs pruning?"
+                aria-label="Weekly review notes"></textarea>
+            <div style="display: flex; gap: 8px; margin-top: 8px;">
+                <button class="primary-btn" style="flex: 1;" onclick="submitWeeklyReview()">Commit Review</button>
+                <button class="secondary-btn" onclick="closeModal('weekly-review-modal')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Engine Link -->
+    <script src="habits.js"></script>
+</body>
+
+</html>
