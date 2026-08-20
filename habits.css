@@ -1,388 +1,177 @@
-/* ==========================================
-   HABITS OS // REFINED MINIMALIST THEMES
-   ========================================== */
+/* ================================================================= *
+ * HABITS OS // SYSTEM V1.5                                          *
+ * ================================================================= */
 
 :root {
-    --bg-obsidian: #0f1115;
-    --bg-card: #141820;
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* --- THEME PALETTES (2 Visible + 8 Hidden Classified Themes) --- */
+
+/* 1. Sakuration (Default Signature Dark Rose) */
+body.theme-sakuration {
+    --bg-main: #0f172a;
+    --bg-card: rgba(30, 41, 59, 0.7);
+    --bg-obsidian: #090d16;
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --accent-primary: #f43f5e;
+    --accent-glow: transparent;
     --border-glass: rgba(255, 255, 255, 0.06);
+    --success: #10b981;
+    --danger: #ef4444;
+}
+
+/* 2. Sanctuary Zen (Calm Minimalist Dark) */
+body.theme-zen {
+    --bg-main: #121212;
+    --bg-card: rgba(24, 24, 24, 0.75);
+    --bg-obsidian: #0a0a0a;
+    --text-primary: #e5e5e5;
+    --text-secondary: #a3a3a3;
+    --text-muted: #737373;
+    --accent-primary: #10b981;
+    --accent-glow: transparent;
+    --border-glass: rgba(255, 255, 255, 0.05);
+    --success: #10b981;
+    --danger: #f87171;
+}
+
+/* 3. Stone Slate (Muted, Matte, Low-Fatigue Dark) */
+body.theme-stone {
+    --bg-main: #151618;
+    --bg-card: #1f2024;
+    --bg-obsidian: #0e0f10;
+    --text-primary: #e4e4e7;
+    --text-secondary: #a1a1aa;
+    --text-muted: #52525b;
+    --accent-primary: #3f3f46;
+    --accent-glow: transparent;
+    --border-glass: rgba(255, 255, 255, 0.05);
+    --success: #10b981;
+    --danger: #ef4444;
+}
+
+/* 4. Forest Moss (Hidden Terminal Theme: Grounding Earth) */
+body.theme-forest {
+    --bg-main: #141714;
+    --bg-card: #1d221d;
+    --bg-obsidian: #0c0f0c;
+    --text-primary: #f0fdf4;
+    --text-secondary: #86efac;
+    --text-muted: #4ade80;
+    --accent-primary: #59735e;
+    --accent-glow: transparent;
+    --border-glass: rgba(255, 255, 255, 0.05);
+    --success: #4ade80;
+    --danger: #f87171;
+}
+
+/* 5. Desert Clay (Hidden Terminal Theme: Warm Terracotta) */
+body.theme-clay {
+    --bg-main: #1a1614;
+    --bg-card: #25201c;
+    --bg-obsidian: #110e0c;
+    --text-primary: #f5f3f0;
+    --text-secondary: #a8a29e;
+    --text-muted: #78716c;
+    --accent-primary: #8c5d48;
+    --accent-glow: transparent;
+    --border-glass: rgba(255, 255, 255, 0.05);
+    --success: #65a30d;
+    --danger: #b91c1c;
+}
+
+/* 6. Morning Mist (Hidden Terminal Theme: Cool Fog) */
+body.theme-mist {
+    --bg-main: #16191e;
+    --bg-card: #20242c;
+    --bg-obsidian: #101216;
     --text-primary: #f1f5f9;
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
+    --accent-primary: #526581;
+    --accent-glow: transparent;
+    --border-glass: rgba(255, 255, 255, 0.05);
+    --success: #38bdf8;
+    --danger: #f87171;
+}
 
-    --accent-primary: #e11d48;
-    /* Sophisticated Crimson */
-    --accent-color: #e11d48;
-    --success: #059669;
-    /* Deep, Calm Emerald */
-    --success-color: #059669;
+/* 7. Linen White (Hidden Terminal Theme: Soft Flax) */
+body.theme-linen {
+    --bg-main: #fcfbf9;
+    --bg-card: #f4f2ee;
+    --bg-obsidian: #eae6df;
+    --text-primary: #292524;
+    --text-secondary: #78716c;
+    --text-muted: #a8a29e;
+    --accent-primary: #78716c;
+    --accent-glow: transparent;
+    --border-glass: rgba(0, 0, 0, 0.05);
+    --success: #15803d;
+    --danger: #b91c1c;
+}
+
+/* 8. Midnight Rain */
+body.theme-rain {
+    --bg-main: #101216;
+    --bg-card: #181c22;
+    --bg-obsidian: #0a0c0e;
+    --text-primary: #e5eaf0;
+    --text-secondary: #829ab1;
+    --text-muted: #486581;
+    --accent-primary: #334e68;
+    --accent-glow: transparent;
+    --border-glass: rgba(255, 255, 255, 0.05);
+    --success: #2dd4bf;
+    --danger: #ef4444;
+}
+
+/* 17. Warm Concrete */
+body.theme-concrete {
+    --bg-main: #191817;
+    --bg-card: #232220;
+    --bg-obsidian: #10100f;
+    --text-primary: #f5f4f0;
+    --text-secondary: #a39e93;
+    --text-muted: #736e65;
+    --accent-primary: #6e655d;
+    --accent-glow: transparent;
+    --border-glass: rgba(255, 255, 255, 0.05);
+    --success: #65a30d;
     --danger: #dc2626;
-    --danger-color: #dc2626;
-
-    --border-width: 1px;
-    --border-style: solid;
-    --border-color: rgba(255, 255, 255, 0.06);
 }
 
-/* --- SAKURATION (Refined Editorial Dark & Rose) --- */
-body.theme-sakuration {
-    --bg-obsidian: #0d0a0b;
-    /* Deep, warm black with subtle vintage depth */
-    --bg-card: #151113;
-    /* Balanced matte dark surface */
-    --border-glass: 1px solid rgba(244, 63, 94, 0.12);
-    /* Clean, thin crimson boundary */
-
-    --text-primary: #fdf2f4;
-    /* Soft, warm paper-white with a hint of rose tint */
-    --text-secondary: #b39299;
-    /* Grounded, dusty rose-grey for high readability */
-    --text-muted: #6e555b;
-    /* Muted structural grey */
-
-    --accent-primary: #f43f5e;
-    /* Sophisticated crimson accent */
-    --accent-color: #f43f5e;
-    --success: #34d399;
-    /* Calm botanical mint for completed habits */
-    --success-color: #34d399;
-    --danger: #fb7185;
-    /* Softened warning rose */
-    --danger-color: #fb7185;
+/* 20. Aged Paper */
+body.theme-aged {
+    --bg-main: #f7f5ef;
+    --bg-card: #eeeae0;
+    --bg-obsidian: #e1dcd0;
+    --text-primary: #22201c;
+    --text-secondary: #6e685f;
+    --text-muted: #9e9587;
+    --accent-primary: #6e685f;
+    --accent-glow: transparent;
+    --border-glass: rgba(0, 0, 0, 0.05);
+    --success: #3f6212;
+    --danger: #991b1b;
 }
 
-/* Guaranteed readability and zero text-vanishing issues */
-body.theme-sakuration,
-body.theme-sakuration p,
-body.theme-sakuration span,
-body.theme-sakuration h1,
-body.theme-sakuration h2,
-body.theme-sakuration h3,
-body.theme-sakuration h4,
-body.theme-sakuration label,
-body.theme-sakuration li {
-    color: var(--text-primary);
-}
+/* --- GLOBAL RESET & LAYOUT --- */
 
-body.theme-sakuration .text-secondary,
-body.theme-sakuration small,
-body.theme-sakuration .muted {
-    color: var(--text-secondary) !important;
-}
-
-body.theme-sakuration a {
-    color: var(--accent-primary);
-    text-decoration: none;
-}
-
-/* --- ZEN / SANCTUARY (Calm, Grounded, Peaceful) --- */
-body.theme-zen {
-    --bg-obsidian: #121413;
-    /* Deep, muted forest-slate stone */
-    --bg-card: #191c1b;
-    /* Soft, matte surface layer */
-    --border-glass: 1px solid rgba(255, 255, 255, 0.05);
-    /* Barely-there boundaries */
-
-    --text-primary: #e2e8e4;
-    /* Soft, warm paper-white (zero eye strain) */
-    --text-secondary: #93a19b;
-    /* Gentle sage-grey for secondary labels */
-    --text-muted: #5c6662;
-    /* Quiet structural grey */
-
-    --accent-primary: #86a89c;
-    /* Muted eucalyptus / soft sage accent */
-    --accent-color: #86a89c;
-    --success: #789b7b;
-    /* Calm, desaturated botanical green */
-    --success-color: #789b7b;
-    --danger: #b37d7d;
-    /* Soft, earthy terracotta red */
-    --danger-color: #b37d7d;
-}
-
-/* Guaranteed visibility for peaceful reading */
-body.theme-zen,
-body.theme-zen p,
-body.theme-zen span,
-body.theme-zen h1,
-body.theme-zen h2,
-body.theme-zen h3,
-body.theme-zen h4,
-body.theme-zen label,
-body.theme-zen li {
-    color: var(--text-primary);
-}
-
-body.theme-zen .text-secondary,
-body.theme-zen small,
-body.theme-zen .muted {
-    color: var(--text-secondary) !important;
-}
-
-body.theme-zen a {
-    color: var(--accent-primary);
-    text-decoration: none;
-}
-
-/* --- OCEAN (Refined Deep Midnight Slate) --- */
-body.theme-ocean {
-    --bg-obsidian: #070b12;
-    /* Darker, richer abyssal navy */
-    --bg-card: #0e1420;
-    /* Deep matte steel card surface */
-    --border-glass: 1px solid rgba(56, 189, 248, 0.08);
-    /* Minimal, clean boundary */
-
-    --text-primary: #e2e8f0;
-    /* Muted, anti-glare platinum white */
-    --text-secondary: #7e90a9;
-    /* Sophisticated steel-blue grey */
-    --text-muted: #485871;
-    /* Quiet structural tone */
-
-    --accent-primary: #38bdf8;
-    /* Restrained sky-blue focus accent */
-    --accent-color: #38bdf8;
-    --success: #34d399;
-    /* Calm botanical mint */
-    --success-color: #34d399;
-    --danger: #f87171;
-    /* Restrained warning red */
-    --danger-color: #f87171;
-}
-
-/* Guaranteed readability and zero text-vanishing issues */
-body.theme-ocean,
-body.theme-ocean p,
-body.theme-ocean span,
-body.theme-ocean h1,
-body.theme-ocean h2,
-body.theme-ocean h3,
-body.theme-ocean h4,
-body.theme-ocean label,
-body.theme-ocean li {
-    color: var(--text-primary);
-}
-
-body.theme-ocean .text-secondary,
-body.theme-ocean small,
-body.theme-ocean .muted {
-    color: var(--text-secondary) !important;
-}
-
-body.theme-ocean a {
-    color: var(--accent-primary);
-    text-decoration: none;
-}
-
-/* --- FOREST (Refined Deep Pine & Moss) --- */
-body.theme-forest {
-    --bg-obsidian: #08110c;
-    /* Deep, rich charcoal-pine obsidian */
-    --bg-card: #0f1c14;
-    /* Quiet, matte moss-slate surface */
-    --border-glass: 1px solid rgba(74, 222, 128, 0.08);
-    /* Minimal organic boundary */
-
-    --text-primary: #e2e8e4;
-    /* Soft paper-white with a subtle warm forest tint */
-    --text-secondary: #7e9485;
-    /* Muted sage-grey for secondary labels */
-    --text-muted: #4b5e52;
-    /* Quiet structural grey */
-
-    --accent-primary: #4ade80;
-    /* Restrained mint/sage focus accent */
-    --accent-color: #4ade80;
-    --success: #34d399;
-    /* Calm botanical green */
-    --success-color: #34d399;
-    --danger: #f87171;
-    /* Restrained warning red */
-    --danger-color: #f87171;
-}
-
-/* Guaranteed readability and zero text-vanishing issues */
-body.theme-forest,
-body.theme-forest p,
-body.theme-forest span,
-body.theme-forest h1,
-body.theme-forest h2,
-body.theme-forest h3,
-body.theme-forest h4,
-body.theme-forest label,
-body.theme-forest li {
-    color: var(--text-primary);
-}
-
-body.theme-forest .text-secondary,
-body.theme-forest small,
-body.theme-forest .muted {
-    color: var(--text-secondary) !important;
-}
-
-body.theme-forest a {
-    color: var(--accent-primary);
-    text-decoration: none;
-}
-
-/* --- VIGNETTE (Aged Sepia & Leather Ledger) --- */
-body.theme-vignette {
-    --bg-obsidian: #141210;
-    /* Deep sepia-black background */
-    --bg-card: #1f1b17;
-    /* Warm espresso-leather card layers */
-    --border-glass: 1px solid #332d26;
-    /* Worn leather boundary */
-    --text-primary: #f2ebd9;
-    /* Parchment-ivory text */
-    --text-secondary: #a89984;
-    /* Muted vintage secondary text */
-    --text-muted: #6e614f;
-    /* Deep leather structure */
-    --accent-primary: #d49c6d;
-    /* Worn tobacco-tan highlight */
-    --accent-color: #d49c6d;
-    --success: #889e73;
-    --success-color: #889e73;
-    --danger: #b86b5e;
-    --danger-color: #b86b5e;
-}
-
-body.theme-vignette,
-body.theme-vignette p,
-body.theme-vignette span,
-body.theme-vignette h1,
-body.theme-vignette h2,
-body.theme-vignette h3,
-body.theme-vignette h4,
-body.theme-vignette label,
-body.theme-vignette li {
-    color: var(--text-primary);
-}
-
-body.theme-vignette .text-secondary,
-body.theme-vignette small,
-body.theme-vignette .muted {
-    color: var(--text-secondary) !important;
-}
-
-body.theme-vignette a {
-    color: var(--accent-primary);
-    text-decoration: none;
-}
-
-/* --- SUNRISE (Blazing Morning Red & Orange) --- */
-body.theme-sunrise {
-    --bg-obsidian: #120a0a;
-    --bg-card: #1c100e;
-    --border-glass: 1px solid rgba(249, 115, 22, 0.15);
-    --text-primary: #fef2f2;
-    --text-secondary: #a88a82;
-    --text-muted: #6b524c;
-    --accent-primary: #f97316;
-    --accent-color: #f97316;
-    --success: #10b981;
-    --success-color: #10b981;
-    --danger: #ef4444;
-    --danger-color: #ef4444;
-}
-
-body.theme-sunrise,
-body.theme-sunrise p,
-body.theme-sunrise span,
-body.theme-sunrise h1,
-body.theme-sunrise h2,
-body.theme-sunrise h3,
-body.theme-sunrise h4,
-body.theme-sunrise label,
-body.theme-sunrise li {
-    color: var(--text-primary);
-}
-
-body.theme-sunrise .text-secondary,
-body.theme-sunrise small,
-body.theme-sunrise .muted {
-    color: var(--text-secondary) !important;
-}
-
-body.theme-sunrise a {
-    color: var(--accent-primary);
-    text-decoration: none;
-}
-
-/* --- SUNSET (Deep Twilight Horizon) --- */
-body.theme-sunset {
-    --bg-obsidian: #090a0f;
-    --bg-card: #11131c;
-    --border-glass: 1px solid rgba(245, 158, 11, 0.12);
-    --text-primary: #f3f4f6;
-    --text-secondary: #8e95a5;
-    --text-muted: #535968;
-    --accent-primary: #f59e0b;
-    --accent-color: #f59e0b;
-    --success: #10b981;
-    --success-color: #10b981;
-    --danger: #ef4444;
-    --danger-color: #ef4444;
-}
-
-body.theme-sunset,
-body.theme-sunset p,
-body.theme-sunset span,
-body.theme-sunset h1,
-body.theme-sunset h2,
-body.theme-sunset h3,
-body.theme-sunset h4,
-body.theme-sunset label,
-body.theme-sunset li {
-    color: var(--text-primary);
-}
-
-body.theme-sunset .text-secondary,
-body.theme-sunset small,
-body.theme-sunset .muted {
-    color: var(--text-secondary) !important;
-}
-
-body.theme-sunset a {
-    color: var(--accent-primary);
-    text-decoration: none;
-}
-
-/* --- AMETHYST V2 (Clean Nocturnal Violet & Plum) --- */
-body.theme-amethyst {
-    --bg-obsidian: #0f0c12;
-    --bg-card: #18131d;
-    --border-glass: 1px solid #2d2338;
-    --accent-primary: #c084fc;
-    --accent-color: #c084fc;
-    --success: #34d399;
-    --success-color: #34d399;
-    --danger: #f87171;
-    --danger-color: #f87171;
-}
-
-body.theme-amethyst input,
-body.theme-amethyst textarea,
-body.theme-amethyst select {
-    background-color: #1f1826 !important;
-    border: 1px solid #3d2f4d !important;
-}
-
-/* --- GLOBAL RESET & BASE LAYOUT --- */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    background-color: var(--bg-obsidian);
+    font-family: var(--font-sans);
+    background-color: var(--bg-main);
     color: var(--text-primary);
     min-height: 100vh;
     display: flex;
@@ -390,112 +179,177 @@ body {
     align-items: flex-start;
     padding: env(safe-area-inset-top) env(safe-area-inset-right) calc(80px + env(safe-area-inset-bottom)) env(safe-area-inset-left);
     overflow-x: hidden;
-}
-
-.mono-data {
-    font-family: 'JetBrains Mono', monospace;
+    transition: background-color 0.3s ease;
 }
 
 .app-container {
     width: 100%;
     max-width: 480px;
-    min-height: 100vh;
+    margin: 0 auto;
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    padding: 16px;
     gap: 16px;
-    position: relative;
 }
 
-.hidden {
-    display: none !important;
-}
 
 /* --- WORKSPACE HEADER --- */
+
 .workspace-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-bottom: 12px;
+    padding: 8px 0;
     border-bottom: 1px solid var(--border-glass);
 }
 
 .workspace-title {
+    font-family: var(--font-mono);
     font-size: 13px;
     font-weight: 700;
     letter-spacing: 0.5px;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
 }
 
 .workspace-actions {
     display: flex;
     gap: 8px;
-    align-items: center;
 }
 
-/* --- APP VIEWS --- */
-.app-view {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    animation: fadeIn 0.25s ease-in-out;
-}
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(4px);
-    }
+/* --- COMPONENTS & CARDS --- */
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-.main-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.main-header h1 {
-    font-size: 20px;
-    font-weight: 700;
-}
-
-.main-header .subtitle {
-    font-size: 11px;
-    color: var(--text-secondary);
-    margin-top: 2px;
-}
-
-/* --- CARDS & PANELS --- */
 .stat-card {
-    background: var(--bg-card);
+    background-color: var(--bg-card);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid var(--border-glass);
     border-radius: 12px;
-    padding: 14px;
+    padding: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
 }
 
 .stat-label {
-    font-size: 11px;
-    font-weight: 600;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 1px;
     color: var(--text-secondary);
 }
 
-/* --- LEVEL BANNER & PROGRESS --- */
+.mono-data {
+    font-family: var(--font-mono);
+}
+
+
+/* --- BUTTONS & CONTROLS --- */
+
+.primary-btn {
+    background-color: var(--accent-primary);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 0 15px var(--accent-glow);
+    transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.primary-btn:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+}
+
+.secondary-btn {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.secondary-btn:hover {
+    border-color: var(--accent-primary);
+    background-color: rgba(255, 255, 255, 0.03);
+}
+
+.sm-btn {
+    padding: 6px 10px;
+    font-size: 10px;
+}
+
+.icon-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glass);
+    color: var(--text-primary);
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.icon-btn:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+
+/* --- INPUTS & SELECTS --- */
+
+input[type="text"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    background-color: var(--bg-obsidian);
+    border: 1px solid var(--border-glass);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    outline: none;
+    transition: var(--transition-smooth);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.app-select {
+    cursor: pointer;
+}
+
+
+/* --- LEVEL & PROGRESS BARS --- */
+
 .level-banner {
     background: var(--bg-card);
     border: 1px solid var(--border-glass);
     border-radius: 12px;
-    padding: 12px 14px;
+    padding: 14px 16px;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -505,6 +359,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-family: var(--font-mono);
     font-size: 11px;
     font-weight: 700;
 }
@@ -512,247 +367,201 @@ body {
 .progress-bar-container {
     width: 100%;
     height: 6px;
-    background: rgba(255, 255, 255, 0.05);
+    background-color: var(--bg-obsidian);
     border-radius: 3px;
     overflow: hidden;
+    border: 1px solid var(--border-glass);
 }
 
 .progress-bar-fill {
     height: 100%;
-    background: var(--accent-primary);
-    border-radius: 3px;
-    transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: var(--accent-primary);
+    width: 0%;
+    transition: width 0.4s ease;
+    box-shadow: 0 0 8px var(--accent-glow);
 }
 
-/* --- BUTTONS & CONTROLS --- */
-.primary-btn {
+
+/* --- FILTERS & VIEWS --- */
+
+.app-view {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.app-view.hidden {
+    display: none !important;
+}
+
+.filter-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-glass);
+    color: var(--text-secondary);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: var(--transition-smooth);
+}
+
+.filter-btn.active {
     background-color: var(--accent-primary);
     color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 14px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.2s ease, transform 0.1s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-}
-
-.primary-btn:active {
-    transform: scale(0.98);
-}
-
-.secondary-btn {
-    background: transparent;
-    color: var(--text-primary);
-    border: 1px solid var(--border-glass);
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.2s ease;
-}
-
-.secondary-btn:hover {
-    background: rgba(255, 255, 255, 0.04);
-}
-
-.sm-btn {
-    padding: 6px 10px;
-    font-size: 11px;
-}
-
-.icon-btn {
-    background: transparent;
-    border: 1px solid var(--border-glass);
-    color: var(--text-primary);
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 13px;
-    transition: background 0.2s ease;
-}
-
-.icon-btn:hover {
-    background: rgba(255, 255, 255, 0.04);
-}
-
-/* --- INPUTS & SELECTS --- */
-input[type="text"],
-input[type="number"],
-select,
-textarea {
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid var(--border-glass);
-    border-radius: 8px;
-    padding: 10px 12px;
-    color: var(--text-primary);
-    font-size: 12px;
-    width: 100%;
-    outline: none;
-    transition: border-color 0.2s ease;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
     border-color: var(--accent-primary);
+    box-shadow: 0 0 10px var(--accent-glow);
 }
 
-.app-select {
-    cursor: pointer;
-}
 
-/* --- HABITS MATRIX LIST --- */
+/* --- HABIT LIST & CARDS --- */
+
 .habit-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
 .habit-card {
-    background: var(--bg-card);
+    background-color: var(--bg-card);
     border: 1px solid var(--border-glass);
-    border-radius: 10px;
-    padding: 12px 14px;
+    border-radius: 12px;
+    padding: 14px;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    transition: all 0.2s ease;
+    justify-content: space-between;
+    gap: 12px;
+    transition: var(--transition-smooth);
 }
 
 .habit-card.completed {
-    border-color: rgba(16, 185, 129, 0.3);
-    background: rgba(16, 185, 129, 0.03);
-}
-
-.habit-card.completed .habit-title {
-    text-decoration: line-through;
     opacity: 0.6;
+    border-color: rgba(16, 185, 129, 0.3);
 }
 
-.habit-info {
+.habit-main {
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    align-items: center;
+    gap: 12px;
     flex: 1;
     min-width: 0;
-    padding-right: 8px;
 }
 
-.habit-title {
-    font-size: 13px;
-    font-weight: 600;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.habit-meta {
-    display: flex;
-    gap: 10px;
-    font-size: 10px;
-    color: var(--text-secondary);
-}
-
-.check-habit-btn {
+.habit-checkbox {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    border: 2px solid var(--text-secondary);
     background: transparent;
-    border: 1px solid var(--border-glass);
-    color: var(--text-primary);
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer;
-    font-size: 12px;
-    transition: all 0.2s ease;
+    transition: var(--transition-smooth);
+    flex-shrink: 0;
 }
 
-.habit-card.completed .check-habit-btn {
+.habit-card.completed .habit-checkbox {
     background-color: var(--success);
     border-color: var(--success);
     color: #fff;
 }
 
-.filter-btn {
-    background: transparent;
-    border: 1px solid var(--border-glass);
-    color: var(--text-secondary);
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 11px;
+.habit-details {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.habit-title {
+    font-size: 13px;
     font-weight: 600;
-    cursor: pointer;
+    color: var(--text-primary);
     white-space: nowrap;
-    transition: all 0.2s ease;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.filter-btn.active {
-    background: var(--accent-primary);
-    border-color: var(--accent-primary);
-    color: #fff;
+.habit-card.completed .habit-title {
+    text-decoration: line-through;
+    color: var(--text-secondary);
 }
 
-/* --- THEME PRESETS SELECTOR --- */
+.habit-meta {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-muted);
+    display: flex;
+    gap: 8px;
+}
+
+.habit-actions {
+    display: flex;
+    gap: 6px;
+}
+
+
+/* --- THEME PRESET CARDS (Settings) --- */
+
 .theme-preset-card {
-    background: rgba(0, 0, 0, 0.2);
+    background: var(--bg-obsidian);
     border: 1px solid var(--border-glass);
+    padding: 12px;
     border-radius: 8px;
-    padding: 10px;
-    text-align: center;
+    font-family: var(--font-mono);
     font-size: 11px;
-    font-weight: 600;
+    text-align: center;
     cursor: pointer;
-    transition: border-color 0.2s ease;
+    transition: var(--transition-smooth);
 }
 
 .theme-preset-card:hover {
     border-color: var(--accent-primary);
+    color: var(--accent-primary);
 }
 
-/* --- BOTTOM NAV TABS --- */
-.view-tab.active {
-    color: var(--accent-primary) !important;
-}
 
-/* --- MODAL OVERLAYS --- */
+/* --- MODALS & OVERLAYS --- */
+
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    width: 100vw;
+    height: 100vh;
+    background: rgba(5, 9, 15, 0.8);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 2000;
+    z-index: 1000;
     padding: 16px;
 }
 
+.modal-overlay.hidden {
+    display: none !important;
+}
+
 .modal-content {
-    background: #0f172a;
+    background-color: var(--bg-main);
     border: 1px solid var(--border-glass);
-    border-radius: 14px;
+    border-radius: 16px;
+    padding: 20px;
     width: 100%;
     max-width: 380px;
-    padding: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    gap: 14px;
+}
+
+.modal-header {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
 }
 
 .modal-header h2 {
@@ -763,33 +572,41 @@ textarea:focus {
 .modal-subtitle {
     font-size: 11px;
     color: var(--text-secondary);
-    margin-top: 2px;
 }
 
-/* --- GLOBAL CRITICAL ACTION (Always Red) --- */
-.reset-system {
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    background: rgba(239, 68, 68, 0.02);
+
+/* --- DIALOG & DIALOG FORM --- */
+
+.app-dialog {
+    background: var(--bg-main);
+    border: 1px solid var(--border-glass);
     border-radius: 12px;
-    padding: 14px;
+    padding: 20px;
+    color: var(--text-primary);
+    width: 90%;
+    max-width: 340px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    margin: auto;
+}
+
+.app-dialog::backdrop {
+    background: rgba(5, 9, 15, 0.8);
+    backdrop-filter: blur(6px);
+}
+
+#category-form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 12px;
 }
 
-.reset-system-btn {
-    background-color: #dc2626 !important;
-    /* Strong, clear red */
-    color: #ffffff !important;
-    border-color: #b91c1c !important;
+#category-form h3 {
+    font-size: 14px;
+    font-family: var(--font-mono);
 }
 
-.btn-danger-fixed:hover,
-.reset-system-btn:hover {
-    background-color: #b91c1c !important;
-    /* Darker red on hover */
-}
-
-.hidden {
-    display: none !important;
+.dialog-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
 }

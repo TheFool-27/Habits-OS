@@ -1,6 +1,5 @@
 // ==========================================
-// HABITS OS // SOVEREIGN OPERATOR V1.2 ENGINE
-// (UPGRADED WITH MANUAL HABIT SET SELECTOR)
+// HABITS OS // SYSTEM V1.5
 // ==========================================
 
 let state = {
@@ -8,29 +7,17 @@ let state = {
     categories: ['Health', 'Deep Work', 'Mindset', 'System'],
     bundles: [
         { id: 'b_morning', name: 'Morning Launch Sequence', habits: [] },
-        { id: 'b_deepwork', name: 'Deep Work Protocol', habits: [] }
+        { id: 'b_deepwork', name: 'Deep Work habit', habits: [] }
     ],
-    freezeTokens: 1, // Streak insurance
     energyAudits: [],
     xp: 0,
     level: 1,
-    coins: 50,
-    bossHp: 100,
     theme: 'sakuration',
-    shopItems: [
-        { id: 'item_freeze', name: 'Streak Freeze Token', cost: 100, type: 'freeze' },
-        { id: 'item_title', name: 'Title: Elite Sovereign', cost: 100, type: 'title' }
-    ],
-    skillTree: [
-        { id: 'sk_1', name: 'Deep Work Overclock', unlocked: false, cost: 50 },
-        { id: 'sk_2', name: 'Telemetry Master', unlocked: false, cost: 80 }
-    ],
-    reflections: [],
-    lastChallengeClaimedDate: ''
+    reflections: []
 };
 
 let currentFilter = 'all';
-let activeSelectingBundleId = null; // Tracks which set is currently in manual selection mode
+let activeSelectingBundleId = null;
 let focusTimerInterval = null;
 let focusSecondsLeft = 25 * 60;
 let focusTotalSeconds = 25 * 60;
@@ -44,16 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     triggerElement.addEventListener('click', () => {
         clickCount++;
-
-        // Clear previous timeout so clicks must be consecutive
         clearTimeout(clickTimer);
-
-        // Reset count if user stops clicking for more than 600ms
         clickTimer = setTimeout(() => {
             clickCount = 0;
         }, 600);
 
-        // Open secret terminal upon reaching 5 clicks
         if (clickCount >= 5) {
             clickCount = 0;
             clearTimeout(clickTimer);
@@ -92,13 +74,6 @@ function loadState() {
     if (!state.bundles || state.bundles.length === 0) {
         state.bundles = [{ id: 'b_morning', name: 'Morning Launch Sequence', habits: [] }];
     }
-
-    const freezeItem = state.shopItems.find(i => i.id === 'item_freeze');
-    if (freezeItem) {
-        freezeItem.cost = 100;
-    } else {
-        state.shopItems.unshift({ id: 'item_freeze', name: 'Streak Freeze Token', cost: 100, type: 'freeze' });
-    }
 }
 
 function saveState() {
@@ -112,7 +87,7 @@ function triggerHaptic(duration = 35) {
     }
 }
 
-// Daily Rollover & Automated Streak Freeze Engine
+// Daily Rollover Check
 function checkDailyRollover() {
     const today = new Date().toISOString().slice(0, 10);
     const lastActive = localStorage.getItem('habits_os_last_date');
@@ -132,19 +107,11 @@ function checkDailyRollover() {
             if (!habit.completedToday) {
                 if (diffDays > 1) {
                     habit.streak = 0;
-                } else if (diffDays === 1) {
-                    if (state.freezeTokens > 0) {
-                        state.freezeTokens -= 1;
-                        console.log(`Streak Freeze deployed automatically for protocol: ${habit.name}`);
-                    } else {
-                        habit.streak = 0;
-                    }
                 }
             }
             habit.completedToday = false;
         });
 
-        state.bossHp = Math.min(100, state.bossHp + 15);
         localStorage.setItem('habits_os_last_date', today);
         saveState();
     }
@@ -164,14 +131,7 @@ function renderAll() {
     renderCategoriesUI();
     renderLevelAndXP();
     renderAnalytics();
-    renderArena();
     populatePrerequisiteSelect();
-    updateFreezeBadge();
-}
-
-function updateFreezeBadge() {
-    const badge = document.getElementById('freeze-token-badge');
-    if (badge) badge.textContent = state.freezeTokens;
 }
 
 // View Switcher
@@ -188,9 +148,7 @@ function switchView(viewName, event) {
 
     triggerHaptic(15);
 
-    if (viewName === 'arena') {
-        renderArena();
-    } else if (viewName === 'analytics') {
+    if (viewName === 'analytics') {
         renderAnalytics();
     } else if (viewName === 'habits') {
         renderHabits();
@@ -199,21 +157,24 @@ function switchView(viewName, event) {
 
 // ================= VIEW 1: HABITS MATRIX =================
 
-function toggleProtocolCreator() {
-    const card = document.getElementById('protocol-creator-card');
+function togglehabitCreator() {
+    const card = document.getElementById('habit-creator-card');
     const icon = document.getElementById('creator-toggle-icon');
     const text = document.getElementById('creator-toggle-text');
 
     if (!card) return;
 
-    if (card.classList.contains('hidden')) {
-        card.classList.remove('hidden');
+    // Check if the card is currently hidden
+    const isHidden = card.style.display === 'none' || card.style.display === '';
+
+    if (isHidden) {
+        card.style.display = 'flex';
         if (icon) icon.className = 'fa-solid fa-minus';
-        if (text) text.textContent = 'Collapse Creator';
+        if (text) text.textContent = 'Cancel';
     } else {
-        card.classList.add('hidden');
+        card.style.display = 'none';
         if (icon) icon.className = 'fa-solid fa-plus';
-        if (text) text.textContent = 'New Protocol';
+        if (text) text.textContent = 'New habit';
     }
 }
 
@@ -221,6 +182,7 @@ function addHabit() {
     const nameInput = document.getElementById('habit-input');
     const categorySelect = document.getElementById('category-select');
     const energySelect = document.getElementById('energy-select');
+    const timeblockSelect = document.getElementById('timeblock-select');
     const triggerInput = document.getElementById('habit-trigger-input');
     const prereqSelect = document.getElementById('habit-prerequisite-select');
 
@@ -232,6 +194,7 @@ function addHabit() {
         name: name,
         category: categorySelect.value,
         energy: energySelect.value,
+        timeblock: timeblockSelect ? timeblockSelect.value : 'Morning',
         trigger: triggerInput.value.trim() || 'Unspecified anchor',
         prerequisite: prereqSelect.value || '',
         streak: 0,
@@ -255,7 +218,7 @@ function toggleHabit(id) {
     if (habit.prerequisite) {
         const prereqHabit = state.habits.find(h => h.id === habit.prerequisite);
         if (prereqHabit && !prereqHabit.completedToday) {
-            alert(`Locked: Complete prerequisite protocol "${prereqHabit.name}" first.`);
+            alert(`Locked: Complete prerequisite habit "${prereqHabit.name}" first.`);
             return;
         }
     }
@@ -267,22 +230,17 @@ function toggleHabit(id) {
         habit.streak += 1;
         habit.history[todayStr] = true;
         addXP(25);
-        addCoins(5);
-        damageBoss(10);
         triggerHaptic(50);
     } else {
         habit.completedToday = false;
         habit.streak = Math.max(0, habit.streak - 1);
         delete habit.history[todayStr];
         addXP(-25);
-        addCoins(-5);
-        damageBoss(-10);
         triggerHaptic(20);
     }
 
     saveState();
     renderAll();
-    checkDailyCompletionChallenge();
 }
 
 function filterHabits(category, event) {
@@ -303,7 +261,7 @@ function renderHabits() {
     filtered.sort((a, b) => (a.completedToday === b.completedToday) ? 0 : a.completedToday ? 1 : -1);
 
     if (filtered.length === 0) {
-        list.innerHTML = `<div class="stat-card" style="text-align: center; color: var(--text-secondary); font-size: 11px; padding: 20px;">No active protocols found in this vector.</div>`;
+        list.innerHTML = `<div class="stat-card" style="text-align: center; color: var(--text-secondary); font-size: 11px; padding: 20px;">No active habits found here.</div>`;
         return;
     }
 
@@ -327,13 +285,13 @@ function renderHabits() {
                     </div>
                 </div>
                 <div style="display: flex; gap: 6px; align-items: center;">
-                    <button class="check-habit-btn" onclick="${isLocked ? `alert('Locked behind prerequisite protocol!')` : `toggleHabit('${habit.id}')`}" aria-label="Execute protocol">
+                    <button class="check-habit-btn" onclick="${isLocked ? `alert('Locked behind prerequisite habit!')` : `toggleHabit('${habit.id}')`}" aria-label="Execute habit">
                         <i class="fa-solid ${habit.completedToday ? 'fa-check' : 'fa-play'}"></i>
                     </button>
-                    <button onclick="openEditHabitModal('${habit.id}')" title="Edit Protocol" style="background: transparent; border: 1px solid var(--border-glass); color: var(--text-secondary); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 11px;" aria-label="Edit protocol">
+                    <button onclick="openEditHabitModal('${habit.id}')" title="Edit habit" style="background: transparent; border: 1px solid var(--border-glass); color: var(--text-secondary); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 11px;" aria-label="Edit habit">
                         <i class="fa-solid fa-pen"></i>
                     </button>
-                    <button onclick="deleteHabit('${habit.id}')" title="Delete Protocol" style="background: transparent; border: 1px solid var(--border-glass); color: var(--text-secondary); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 11px;" aria-label="Delete protocol">
+                    <button onclick="deleteHabit('${habit.id}')" title="Delete habit" style="background: transparent; border: 1px solid var(--border-glass); color: var(--text-secondary); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 11px;" aria-label="Delete habit">
                         <i class="fa-solid fa-trash-can"></i>
                     </button>
                 </div>
@@ -359,20 +317,11 @@ function addXP(amount) {
     if (state.xp >= requiredXP) {
         state.xp -= requiredXP;
         state.level += 1;
-        state.coins += 50;
-
-        let dropText = '';
-        if (Math.random() < 0.10 && state.freezeTokens < 3) {
-            state.freezeTokens += 1;
-            dropText = ' & Rare Drop: +1 Streak Freeze Token!';
-        }
-
         triggerHaptic(100);
-        alert(`SANCTUARY UPGRADE! Operator reached Level ${state.level}. +50 Coins harvested${dropText}`);
+        alert(`LEVEL UP! Operator reached Level ${state.level}.`);
     }
     if (state.xp < 0) state.xp = 0;
     renderLevelAndXP();
-    updateFreezeBadge();
 }
 
 function renderLevelAndXP() {
@@ -397,6 +346,9 @@ function openEditHabitModal(id) {
     document.getElementById('edit-habit-name').value = habit.name;
     document.getElementById('edit-habit-energy').value = habit.energy;
     document.getElementById('edit-habit-trigger').value = habit.trigger || '';
+
+    const timeblockSelect = document.getElementById('edit-habit-timeblock');
+    if (timeblockSelect) timeblockSelect.value = habit.timeblock || 'Morning';
 
     const catSelect = document.getElementById('edit-habit-category');
     catSelect.innerHTML = state.categories.map(cat => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`).join('');
@@ -425,13 +377,15 @@ function saveEditedHabit() {
 
     const name = nameField.value.trim();
     if (!name) {
-        alert('Protocol name cannot be empty.');
+        alert('Habit name cannot be empty.');
         return;
     }
 
     habit.name = name;
     habit.category = document.getElementById('edit-habit-category').value;
     habit.energy = document.getElementById('edit-habit-energy').value;
+    const timeblockSelect = document.getElementById('edit-habit-timeblock');
+    if (timeblockSelect) habit.timeblock = timeblockSelect.value;
     habit.trigger = document.getElementById('edit-habit-trigger').value.trim() || 'Unspecified anchor';
     habit.prerequisite = document.getElementById('edit-habit-prerequisite').value;
 
@@ -444,12 +398,10 @@ function deleteHabit(id) {
     const habit = state.habits.find(h => h.id === id);
     if (!habit) return;
 
-    if (!confirm(`Permanently purge protocol "${habit.name}"?`)) return;
+    if (!confirm(`Permanently purge habit "${habit.name}"?`)) return;
 
     if (habit.completedToday) {
         state.xp = Math.max(0, state.xp - 25);
-        state.coins = Math.max(0, state.coins - 5);
-        state.bossHp = Math.min(100, state.bossHp + 10);
     }
 
     state.habits = state.habits.filter(h => h.id !== id);
@@ -535,7 +487,7 @@ function removeHabitFromSet(bundleId, habitId) {
 function completeBundleBatch(bundleId) {
     const bundle = state.bundles.find(b => b.id === bundleId);
     if (!bundle || bundle.habits.length === 0) {
-        alert('This habit set is empty. Add protocols to enable batch execution.');
+        alert('This habit set is empty. Add habits to enable batch execution.');
         return;
     }
 
@@ -548,7 +500,7 @@ function completeBundleBatch(bundleId) {
             if (habit.prerequisite) {
                 const prereq = state.habits.find(h => h.id === habit.prerequisite);
                 if (prereq && !prereq.completedToday) {
-                    return; // Skip locked habits in batch
+                    return;
                 }
             }
 
@@ -561,18 +513,15 @@ function completeBundleBatch(bundleId) {
 
     if (newlyCompletedCount > 0) {
         addXP(25 * newlyCompletedCount);
-        addCoins(5 * newlyCompletedCount);
-        damageBoss(10 * newlyCompletedCount);
         triggerHaptic(90);
-        alert(`⚡ BATCH EXECUTION COMPLETE: "${bundle.name}"\n+${newlyCompletedCount} protocols marked as done instantly!`);
+        alert(`⚡ BATCH EXECUTION COMPLETE: "${bundle.name}"\n+${newlyCompletedCount} habits marked as done instantly!`);
     } else {
-        alert(`All protocols in "${bundle.name}" are already completed today.`);
+        alert(`All habits in "${bundle.name}" are already completed today.`);
     }
 
     saveState();
     renderAll();
     renderSequenceModalList();
-    checkDailyCompletionChallenge();
 }
 
 function renderSequenceModalList() {
@@ -608,7 +557,7 @@ function renderSequenceModalList() {
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <div style="font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px;">
                         <span>${escapeHtml(bundle.name)}</span>
-                        <span style="font-size: 10px; color: var(--text-secondary);">(${setHabits.length} protocols)</span>
+                        <span style="font-size: 10px; color: var(--text-secondary);">(${setHabits.length} habits)</span>
                     </div>
                     <div style="display: flex; gap: 6px;">
                         <button class="primary-btn sm-btn" onclick="completeBundleBatch('${bundle.id}')" title="Execute entire set instantly">
@@ -621,7 +570,7 @@ function renderSequenceModalList() {
                 </div>
 
                 <div style="display: flex; flex-direction: column; gap: 4px; padding-left: 4px;">
-                    ${setHabits.length === 0 ? `<div style="font-size: 11px; color: var(--text-muted); font-style: italic;">No protocols in this set yet.</div>` :
+                    ${setHabits.length === 0 ? `<div style="font-size: 11px; color: var(--text-muted); font-style: italic;">No habits in this set yet.</div>` :
                 setHabits.map(h => `
                             <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; background: rgba(0,0,0,0.2); padding: 6px 8px; border-radius: 6px;">
                                 <span style="${h.completedToday ? 'text-decoration: line-through; opacity: 0.6;' : ''}">${escapeHtml(h.name)}</span>
@@ -631,13 +580,13 @@ function renderSequenceModalList() {
                 </div>
 
                 <button class="secondary-btn sm-btn" style="align-self: flex-start; margin-top: 4px;" onclick="toggleHabitSelector('${bundle.id}')">
-                    <i class="fa-solid ${isSelecting ? 'fa-chevron-up' : 'fa-plus'}"></i> ${isSelecting ? 'Close Picker' : 'Add Protocol Manually'}
+                    <i class="fa-solid ${isSelecting ? 'fa-chevron-up' : 'fa-plus'}"></i> ${isSelecting ? 'Close Picker' : 'Add habit Manually'}
                 </button>
 
                 ${isSelecting ? `
                     <div style="background: rgba(0,0,0,0.4); border: 1px dashed var(--border-glass); border-radius: 8px; padding: 10px; display: flex; flex-direction: column; gap: 6px; margin-top: 4px;">
-                        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-secondary);">Select Protocols to Add:</div>
-                        ${unassignedHabits.length === 0 ? `<div style="font-size: 11px; color: var(--text-muted); font-style: italic;">All protocols are already in this set.</div>` :
+                        <div style="font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-secondary);">Select habits to Add:</div>
+                        ${unassignedHabits.length === 0 ? `<div style="font-size: 11px; color: var(--text-muted); font-style: italic;">All habits are already in this set.</div>` :
                     unassignedHabits.map(uh => `
                                 <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; background: rgba(255,255,255,0.03); padding: 6px 8px; border-radius: 6px;">
                                     <span>${escapeHtml(uh.name)}</span>
@@ -671,7 +620,6 @@ function renderAnalytics() {
 
     renderHeatmap();
     renderVelocityChart();
-    renderEnergyLeaks();
 }
 
 function renderHeatmap() {
@@ -688,7 +636,7 @@ function renderHeatmap() {
         let opacity = activeCount > 0 ? Math.min(1, 0.3 + (activeCount * 0.2)) : 0.05;
         let bg = activeCount > 0 ? 'var(--accent-primary)' : 'rgba(255,255,255,0.05)';
 
-        html += `<div title="${dateStr}: ${activeCount} protocols" style="height: 18px; background-color: ${bg}; opacity: ${opacity}; border-radius: 3px;"></div>`;
+        html += `<div title="${dateStr}: ${activeCount} habits" style="height: 18px; background-color: ${bg}; opacity: ${opacity}; border-radius: 3px;"></div>`;
     }
     container.innerHTML = html;
 }
@@ -706,45 +654,10 @@ function renderVelocityChart() {
         const heightPct = Math.min(100, (count / Math.max(1, state.habits.length)) * 100);
 
         html += `<div style="flex: 1; display: flex; flex-direction: column; justify-content: flex-end; height: 100%;">
-            <div style="background-color: var(--accent-primary); height: ${Math.max(10, heightPct)}%; border-radius: 2px 2px 0 0;" title="${dateStr}: ${count} completed"></div>
+            <div style="background-color: var(--accent-primary); height: ${Math.max(1, heightPct)}%; border-radius: 2px 2px 0 0;" title="${dateStr}: ${count} completed"></div>
         </div>`;
     }
     container.innerHTML = html;
-}
-
-function renderEnergyLeaks() {
-    const summary = document.getElementById('energy-leak-summary');
-    if (!summary) return;
-
-    if (state.energyAudits.length === 0) {
-        summary.textContent = "No recent friction points logged.";
-        return;
-    }
-
-    const latest = state.energyAudits[state.energyAudits.length - 1];
-    summary.innerHTML = `<strong>Latest Drain:</strong> ${escapeHtml(latest.drain)}<br><strong>Latest Boost:</strong> ${escapeHtml(latest.gain)}`;
-}
-
-function submitEnergyAudit() {
-    const gainInput = document.getElementById('energy-gain-input');
-    const drainInput = document.getElementById('energy-drain-input');
-
-    const gain = gainInput.value.trim();
-    const drain = drainInput.value.trim();
-
-    if (!gain && !drain) return;
-
-    state.energyAudits.push({
-        date: new Date().toISOString().slice(0, 10),
-        gain: gain || 'None specified',
-        drain: drain || 'None specified'
-    });
-
-    saveState();
-    gainInput.value = '';
-    drainInput.value = '';
-    renderAnalytics();
-    alert('Energy telemetry committed successfully.');
 }
 
 function renderCategoriesUI() {
@@ -765,9 +678,30 @@ function renderCategoriesUI() {
 }
 
 function promptNewCategory() {
-    const newCat = prompt('Enter new sovereign category name:');
-    if (!newCat) return;
+    const dialog = document.getElementById('category-dialog');
+    const input = document.getElementById('category-input');
+    if (dialog && input) {
+        input.value = '';
+        dialog.showModal();
+        input.focus();
+    }
+}
+
+function closeCategoryDialog() {
+    const dialog = document.getElementById('category-dialog');
+    if (dialog) {
+        dialog.close();
+    }
+}
+
+function handleCategorySubmit(event) {
+    event.preventDefault();
+    const input = document.getElementById('category-input');
+    if (!input) return;
+
+    const newCat = input.value;
     const cleanCat = newCat.trim();
+
     if (cleanCat && !state.categories.includes(cleanCat)) {
         state.categories.push(cleanCat);
         saveState();
@@ -775,169 +709,11 @@ function promptNewCategory() {
         const select = document.getElementById('category-select');
         if (select) select.value = cleanCat;
     }
+
+    closeCategoryDialog();
 }
 
-function showFreezeInfo() {
-    alert(`Streak Insurance Active (${state.freezeTokens} Tokens)\n\nThese automatically deploy if you miss a day, protecting your hard-earned protocol streaks from resetting.`);
-}
-
-function submitReflection() {
-    const noteInput = document.getElementById('habit-note-input');
-    const note = noteInput.value.trim();
-    if (!note) return;
-
-    state.reflections.push({
-        date: new Date().toISOString(),
-        note: note
-    });
-
-    addXP(150);
-    saveState();
-    noteInput.value = '';
-    alert('Stoic reflection logged. +150 XP awarded.');
-}
-
-// ================= VIEW 3: ARENA & SHOP =================
-
-function addCoins(amount) {
-    state.coins += amount;
-    if (state.coins < 0) state.coins = 0;
-    renderArena();
-}
-
-function damageBoss(amount) {
-    state.bossHp -= amount;
-    if (state.bossHp <= 0) {
-        state.bossHp = 100;
-        state.coins += 50;
-        triggerHaptic(80);
-        alert('PROCASTRINATION DEMON DEFEATED! +50 Bonus Coins harvested.');
-    }
-    renderArena();
-}
-
-function renderArena() {
-    const coinEl = document.getElementById('shop-coin-balance');
-    const hpText = document.getElementById('boss-hp-text');
-    const hpBar = document.getElementById('boss-hp-bar');
-    const shopList = document.getElementById('shop-items-list');
-    const skillList = document.getElementById('skill-tree-list');
-
-    if (coinEl) coinEl.textContent = `${state.coins} 🪙`;
-    if (hpText) hpText.textContent = `${state.bossHp} / 100`;
-    if (hpBar) hpBar.style.width = `${state.bossHp}%`;
-
-    if (shopList) {
-        shopList.innerHTML = state.shopItems.map(item => `
-            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border-glass);">
-                <div style="font-size: 12px; font-weight: 600;">${escapeHtml(item.name)} <span style="font-size: 10px; color: var(--accent-primary);">(${item.cost} 🪙)</span></div>
-                <button class="secondary-btn sm-btn" onclick="buyShopItem('${item.id}')">Redeem</button>
-            </div>
-        `).join('');
-    }
-
-    if (skillList) {
-        skillList.innerHTML = state.skillTree.map(skill => `
-            <div style="display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.2); padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border-glass);">
-                <div style="font-size: 12px; font-weight: 600;">${escapeHtml(skill.name)} <span style="font-size: 10px; color: var(--accent-primary);">(${skill.cost} 🪙)</span></div>
-                <button class="secondary-btn sm-btn" ${skill.unlocked ? 'disabled style="opacity: 0.5;"' : `onclick="unlockSkill('${skill.id}')"`}>${skill.unlocked ? 'Unlocked' : 'Research'}</button>
-            </div>
-        `).join('');
-    }
-}
-
-function buyShopItem(id) {
-    const item = state.shopItems.find(i => i.id === id);
-    if (!item) return;
-
-    if (state.coins < item.cost) {
-        alert('Insufficient coin balance in vault.');
-        return;
-    }
-
-    state.coins -= item.cost;
-    if (item.type === 'freeze') {
-        state.freezeTokens += 1;
-    }
-
-    saveState();
-    renderArena();
-    updateFreezeBadge();
-    triggerHaptic(40);
-    alert(`Successfully redeemed reward: ${item.name}`);
-}
-
-function addShopItem() {
-    const nameInput = document.getElementById('new-reward-name');
-    const costInput = document.getElementById('new-reward-cost');
-
-    const name = nameInput.value.trim();
-    const cost = parseInt(costInput.value);
-
-    if (!name || isNaN(cost) || cost <= 0) return;
-
-    state.shopItems.push({
-        id: 'custom_' + Date.now(),
-        name: name,
-        cost: cost,
-        type: 'custom'
-    });
-
-    saveState();
-    nameInput.value = '';
-    costInput.value = '';
-    renderArena();
-}
-
-function checkDailyCompletionChallenge() {
-    if (state.habits.length === 0) return;
-    const allCompleted = state.habits.every(h => h.completedToday);
-    const todayStr = new Date().toISOString().slice(0, 10);
-
-    if (allCompleted && state.freezeTokens === 0 && state.lastChallengeClaimedDate !== todayStr) {
-        openModal('reward-choice-modal');
-    }
-}
-
-function claimReward(type) {
-    const todayStr = new Date().toISOString().slice(0, 10);
-    state.lastChallengeClaimedDate = todayStr;
-
-    if (type === 'coins') {
-        state.coins += 50;
-        alert('Claimed: +50 Coins added to vault.');
-    } else if (type === 'freeze') {
-        if (state.freezeTokens < 3) {
-            state.freezeTokens += 1;
-            alert('Claimed: +1 Streak Freeze deployed to inventory.');
-        } else {
-            alert('Inventory maxed out (Limit: 3). +50 Coins awarded instead.');
-            state.coins += 50;
-        }
-    }
-
-    saveState();
-    renderAll();
-    closeModal('reward-choice-modal');
-}
-
-function unlockSkill(id) {
-    const skill = state.skillTree.find(s => s.id === id);
-    if (!skill || skill.unlocked) return;
-
-    if (state.coins < skill.cost) {
-        alert('Insufficient coins for skill research.');
-        return;
-    }
-
-    state.coins -= skill.cost;
-    skill.unlocked = true;
-    saveState();
-    renderArena();
-    alert(`Skill unlocked: ${skill.name}`);
-}
-
-// ================= VIEW 4: SETTINGS & SOVEREIGNTY =================
+// ================= VIEW 3: SETTINGS & SOVEREIGNTY =================
 
 function setTheme(themeName, save = true) {
     state.theme = themeName;
@@ -966,7 +742,7 @@ function importData(event) {
             state = { ...state, ...imported };
             saveState();
             renderAll();
-            alert('Sovereign data restored successfully.');
+            alert('Data restored successfully.');
         } catch (err) {
             alert('Invalid backup JSON file.');
         }
@@ -1042,9 +818,8 @@ function startCustomFocusTimer() {
             if (focusSecondsLeft <= 0) {
                 clearInterval(focusTimerInterval);
                 triggerHaptic(120);
-                alert(`Zero-Dark-Thirty sprint (${mins}m) completed. +100 XP awarded.`);
+                alert(`Focus timer (${mins}m) completed. +100 XP awarded.`);
                 addXP(100);
-                addCoins(20);
                 abortFocusMode();
             }
         }
@@ -1076,9 +851,8 @@ function openWeeklyReview() {
 
 function submitWeeklyReview() {
     addXP(300);
-    addCoins(25);
     closeModal('weekly-review-modal');
-    alert('Weekly Executive Review committed. +300 XP, +25 Coins harvested.');
+    alert('Weekly review saved. +300 XP.');
 }
 
 // Utility escape helper
